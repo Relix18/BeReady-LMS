@@ -40,7 +40,6 @@ const userSchema = new Schema(
     password: {
       type: String,
       minLength: [6, "Password must be at least 6 characters"],
-      required: [true, "Password is required"],
       select: false,
     },
     avatar: {
@@ -75,11 +74,15 @@ userSchema.pre<IUser>("save", async function (next) {
 });
 
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET as Secret);
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET as Secret, {
+    expiresIn: "5m",
+  });
 };
 
 userSchema.methods.signRefreshToken = function () {
-  return jwt.sign({ id: this._id }, process.env.REFRESH_SECRET as Secret);
+  return jwt.sign({ id: this._id }, process.env.REFRESH_SECRET as Secret, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
 };
 
 userSchema.methods.comparePassword = async function (password: string) {
