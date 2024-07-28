@@ -1,30 +1,47 @@
 import { Response } from "express";
 import jwt, { Secret } from "jsonwebtoken";
+import { IUser } from "../models/user.model";
+import { redis } from "../data/redis.js";
 
-interface IRegistration {
-  name?: string;
-  email: string;
-  password: string;
-  avatar?: string;
-  getJWTToken(): string;
+interface IOptions {
+  expires: Date;
+  maxAge: number;
+  httpOnly: boolean;
+  sameSite: "none" | "lax" | "strict" | "none";
+  secure?: boolean;
 }
 
-export const sendToken = (
-  user: IRegistration,
-  statusCode: number,
-  res: Response
-) => {
+export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   const token = user.getJWTToken();
+  const refreshToken = user.signRefreshToken();
+  const tokenExpire = parseInt(process.env.COOKIE_EXPIRE || "300", 10);
+  const refreshExpire = parseInt(process.env.REFRESH_EXPIRE || "1200", 10);
 
-  const option = {
-    expires: new Date(
-      Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
+  redis.set(user._id, JSON.stringify(user) as any);
+
+  const accessTokenOption: IOptions = {
+    expires: new Date(Date.now() + tokenExpire * 1000),
+    maxAge: tokenExpire * 1000,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
   };
 
-  res.status(statusCode).cookie("token", token, option).json({
+  const refreshTokenOption: IOptions = {
+    expires: new Date(Date.now() + refreshExpire * 1000),
+    maxAge: refreshExpire * 1000,
+    httpOnly: true,
+    sameSite: "lax",
+  };
+
+  if (process.env.NODE_ENV === "production") {
+    accessTokenOption.secure = true;
+    refreshTokenOption.secure = true;
+  }
+
+  res.cookie("access_token", token, accessTokenOption);
+  res.cookie("refresh_token", refreshToken, refreshTokenOption);
+
+  res.status(statusCode).json({
     success: true,
     user,
     token,

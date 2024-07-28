@@ -18,6 +18,8 @@ export interface IUser extends Document {
   isVerified: boolean;
   courses: Array<{ courseId: string }>;
   comparePassword: (password: string) => Promise<boolean>;
+  getJWTToken: () => Promise<string>;
+  signRefreshToken: () => Promise<string>;
 }
 
 const userSchema = new Schema(
@@ -73,9 +75,11 @@ userSchema.pre<IUser>("save", async function (next) {
 });
 
 userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET as Secret, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET as Secret);
+};
+
+userSchema.methods.signRefreshToken = function () {
+  return jwt.sign({ id: this._id }, process.env.REFRESH_SECRET as Secret);
 };
 
 userSchema.methods.comparePassword = async function (password: string) {

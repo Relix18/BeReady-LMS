@@ -1,12 +1,30 @@
 import jwt from "jsonwebtoken";
+import { redis } from "../data/redis.js";
 export const sendToken = (user, statusCode, res) => {
     const token = user.getJWTToken();
-    const option = {
-        expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+    const refreshToken = user.signRefreshToken();
+    const tokenExpire = parseInt(process.env.COOKIE_EXPIRE || "300", 10);
+    const refreshExpire = parseInt(process.env.REFRESH_EXPIRE || "1200", 10);
+    redis.set(user._id, JSON.stringify(user));
+    const accessTokenOption = {
+        expires: new Date(Date.now() + tokenExpire * 1000),
+        maxAge: tokenExpire * 1000,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
     };
-    res.status(statusCode).cookie("token", token, option).json({
+    const refreshTokenOption = {
+        expires: new Date(Date.now() + refreshExpire * 1000),
+        maxAge: refreshExpire * 1000,
+        httpOnly: true,
+        sameSite: "lax",
+    };
+    if (process.env.NODE_ENV === "production") {
+        accessTokenOption.secure = true;
+        refreshTokenOption.secure = true;
+    }
+    res.cookie("access_token", token, accessTokenOption);
+    res.cookie("refresh_token", refreshToken, refreshTokenOption);
+    res.status(statusCode).json({
         success: true,
         user,
         token,

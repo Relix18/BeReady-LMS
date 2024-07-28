@@ -20,10 +20,6 @@ export const errorMiddleware = (
     message: err.message,
   };
 
-  if (envMode === "DEVELOPMENT") {
-    response.error = err;
-  }
-
   //Wrong Mongodb id error
   if (err.name === "CastError") {
     const message = `Resource not found. Invalid: ${err.path}`;
