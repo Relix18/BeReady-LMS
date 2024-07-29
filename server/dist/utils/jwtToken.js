@@ -3,13 +3,13 @@ import { redis } from "../data/redis.js";
 const tokenExpire = parseInt(process.env.COOKIE_EXPIRE || "300", 10);
 const refreshExpire = parseInt(process.env.REFRESH_EXPIRE || "1200", 10);
 export const accessTokenOption = {
-    expires: new Date(Date.now() + tokenExpire * 60 * 1000),
-    maxAge: tokenExpire * 1000,
+    expires: new Date(Date.now() + tokenExpire * 60 * 60 * 1000),
+    maxAge: tokenExpire * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "lax",
 };
 export const refreshTokenOption = {
-    expires: new Date(Date.now() + refreshExpire * 1000),
+    expires: new Date(Date.now() + refreshExpire * 24 * 60 * 60 * 1000),
     maxAge: refreshExpire * 24 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: "lax",

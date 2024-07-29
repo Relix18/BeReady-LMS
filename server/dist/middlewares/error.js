@@ -1,4 +1,5 @@
 import ErrorHandler from "../utils/errorHandler.js";
+import { envMode } from "../app.js";
 export const errorMiddleware = (err, req, res, next) => {
     err.message ||= "Internal Server Error";
     err.status = err.status || 500;
@@ -6,6 +7,9 @@ export const errorMiddleware = (err, req, res, next) => {
         success: false,
         message: err.message,
     };
+    if (envMode === "DEVELOPMENT") {
+        response.error = err;
+    }
     //Wrong Mongodb id error
     if (err.name === "CastError") {
         const message = `Resource not found. Invalid: ${err.path}`;

@@ -4,6 +4,7 @@ import { TryCatch } from "../middlewares/error.js";
 import { accessTokenOption, activationToken, refreshTokenOption, sendToken, } from "../utils/jwtToken.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../data/redis.js";
+import { v2 as cloudinary } from "cloudinary";
 export const register = TryCatch(async (req, res, next) => {
     const { name, email, password, avatar } = req.body;
     const isEmailExist = await User.findOne({ email });
@@ -109,6 +110,7 @@ export const updateAccessToken = TryCatch(async (req, res, next) => {
     const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, {
         expiresIn: "7d",
     });
+    req.user = user;
     res.cookie("access_token", accessToken, accessTokenOption);
     res.cookie("refresh_token", refreshToken, refreshTokenOption);
     res.status(200).json({ success: true, accessToken });
@@ -116,10 +118,11 @@ export const updateAccessToken = TryCatch(async (req, res, next) => {
 //get user by id
 export const getUserById = TryCatch(async (req, res, next) => {
     const id = req.user?._id;
-    const user = await User.findById(id);
-    if (!user) {
+    const userJson = await redis.get(id);
+    if (!userJson) {
         return next(new ErrorHandler(404, "User not found"));
     }
+    const user = JSON.parse(userJson);
     res.status(200).json({ success: true, user });
 });
 //social auth
@@ -138,4 +141,83 @@ export const socialAuth = TryCatch(async (req, res, next) => {
     else {
         sendToken(user, 200, res);
     }
+});
+export const updateProfile = TryCatch(async (req, res, next) => {
+    const id = req.user?._id;
+    const { name, email } = req.body;
+    const user = await User.findById(id);
+    if (email && user) {
+        const isEmailExist = await User.findOne({ email });
+        if (isEmailExist) {
+            return next(new ErrorHandler(400, "Email already exists"));
+        }
+        user.email = email;
+    }
+    if (name && user) {
+        user.name = name;
+    }
+    await user?.save();
+    await redis.set(id, JSON.stringify(user));
+    res.status(200).json({ success: true, user });
+});
+export const updatePassword = TryCatch(async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.user?._id;
+    const user = await User.findById(id).select("+password");
+    if (!oldPassword || !newPassword) {
+        return next(new ErrorHandler(400, "Please enter old and new password"));
+    }
+    if (user?.password === undefined) {
+        return next(new ErrorHandler(400, "Invalid user"));
+    }
+    if (!user) {
+        return next(new ErrorHandler(404, "User not found"));
+    }
+    const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch) {
+        return next(new ErrorHandler(400, "Old password is incorrect"));
+    }
+    user.password = newPassword;
+    await user.save();
+    await redis.set(id, JSON.stringify(user));
+    res
+        .status(200)
+        .json({ success: true, message: "Password updated successfully" });
+});
+//update user avatar
+export const updateAvatar = TryCatch(async (req, res, next) => {
+    const id = req.user?._id;
+    const { avatar } = req.body;
+    const user = await User.findById(id);
+    if (!avatar) {
+        return next(new ErrorHandler(400, "Please upload image"));
+    }
+    if (avatar && user) {
+        if (user?.avatar?.public_id) {
+            await cloudinary.uploader.destroy(user.avatar?.public_id);
+            const myCloud = await cloudinary.uploader.upload(avatar, {
+                folder: "avatars",
+                width: 150,
+                crop: "scale",
+            });
+            user.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+        }
+        else {
+            const myCloud = await cloudinary.uploader.upload(avatar, {
+                folder: "avatars",
+                width: 150,
+                crop: "scale",
+            });
+            user.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+        }
+    }
+    await user?.save();
+    await redis.set(id, JSON.stringify(user));
+    res.status(200).json({ success: true, user });
 });
