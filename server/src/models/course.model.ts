@@ -22,7 +22,6 @@ interface ICourseData extends Document {
   title: string;
   description: string;
   videoUrl: string;
-  videoThumbnail: object;
   videoSection: string;
   videoLength: number;
   links: ILink[];
@@ -71,7 +70,6 @@ const courseDataSchema = new Schema<ICourseData>({
   title: String,
   description: String,
   videoUrl: String,
-  videoThumbnail: Object,
   videoSection: String,
   videoLength: Number,
   links: [linkSchema],
@@ -98,11 +96,9 @@ const courseSchema = new Schema<ICourse>({
   thumbnail: {
     public_id: {
       type: String,
-      required: true,
     },
     url: {
       type: String,
-      required: true,
     },
   },
   tags: {

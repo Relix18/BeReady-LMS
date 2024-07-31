@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { errorMiddleware } from "./middlewares/error.js";
 import user from "./routes/user.route.js";
+import course from "./routes/course.route.js";
 
 export const app = express();
 dotenv.config({ path: ".env" });
@@ -24,6 +25,7 @@ app.use(
 
 //routes
 app.use("/api/v1", user);
+app.use("/api/v1", course);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello");

@@ -20,7 +20,6 @@ const courseDataSchema = new Schema({
     title: String,
     description: String,
     videoUrl: String,
-    videoThumbnail: Object,
     videoSection: String,
     videoLength: Number,
     links: [linkSchema],
@@ -46,11 +45,9 @@ const courseSchema = new Schema({
     thumbnail: {
         public_id: {
             type: String,
-            required: true,
         },
         url: {
             type: String,
-            required: true,
         },
     },
     tags: {

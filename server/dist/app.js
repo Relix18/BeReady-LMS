@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { errorMiddleware } from "./middlewares/error.js";
 import user from "./routes/user.route.js";
+import course from "./routes/course.route.js";
 export const app = express();
 dotenv.config({ path: ".env" });
 export const envMode = process.env.NODE_ENV?.trim() || "DEVELOPMENT";
@@ -17,6 +18,7 @@ app.use(cors({
 }));
 //routes
 app.use("/api/v1", user);
+app.use("/api/v1", course);
 app.get("/", (req, res) => {
     res.send("Hello");
 });
