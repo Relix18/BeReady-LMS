@@ -88,3 +88,18 @@ export const getAllCourses = TryCatch(async (req, res, next) => {
         courses,
     });
 });
+//get course content -- for valid user
+export const getCourseByUser = TryCatch(async (req, res, next) => {
+    const userCourses = req.user?.courses;
+    const courseId = req.params.id;
+    console.log(userCourses);
+    const isCourseExist = userCourses?.find((course) => course.courseId.toString() === courseId);
+    if (!isCourseExist) {
+        return next(new ErrorHandler(404, "You don't have access to this course"));
+    }
+    const courses = await Course.findById(courseId);
+    res.status(200).json({
+        success: true,
+        courses,
+    });
+});
