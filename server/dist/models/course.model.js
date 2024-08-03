@@ -13,8 +13,8 @@ const linkSchema = new Schema({
 });
 const commentSchema = new Schema({
     user: Object,
-    comment: String,
-    commentReplies: [Object],
+    question: String,
+    questionReplies: [Object],
 });
 const courseDataSchema = new Schema({
     title: String,

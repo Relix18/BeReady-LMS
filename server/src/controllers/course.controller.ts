@@ -4,6 +4,8 @@ import { Course } from "../models/course.model.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import { v2 as cloudinary } from "cloudinary";
 import { redis } from "../data/redis.js";
+import mongoose from "mongoose";
+import sendEmail from "../utils/sendMail.js";
 
 //upload course
 export const uploadCourse = TryCatch(
@@ -120,8 +122,6 @@ export const getCourseByUser = TryCatch(
     const userCourses = req.user?.courses;
     const courseId = req.params.id;
 
-    console.log(userCourses);
-
     const isCourseExist = userCourses?.find(
       (course) => course.courseId.toString() === courseId
     );
@@ -136,6 +136,111 @@ export const getCourseByUser = TryCatch(
     res.status(200).json({
       success: true,
       courses,
+    });
+  }
+);
+
+// add question in course
+interface IAddQuestion {
+  question: string;
+  courseId: string;
+  contentId: string;
+}
+
+export const addQuestion = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { question, courseId, contentId } = req.body as IAddQuestion;
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return next(new ErrorHandler(404, "Course not found"));
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(contentId)) {
+      return next(new ErrorHandler(404, "Invalid content id"));
+    }
+
+    const courseContent = course?.courseData?.find(
+      (item: any) => item._id.toString() === contentId
+    );
+
+    if (!courseContent) {
+      return next(new ErrorHandler(404, "Content not found"));
+    }
+
+    const newQuestion: any = {
+      user: req.user,
+      question,
+      questionReplies: [],
+    };
+
+    courseContent.questions.push(newQuestion);
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  }
+);
+
+//add answer in question
+interface IAddReply {
+  questionId: string;
+  courseId: string;
+  contentId: string;
+  answer: string;
+}
+
+export const addAnswer = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { questionId, courseId, contentId, answer } = req.body as IAddReply;
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return next(new ErrorHandler(404, "Course not found"));
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(contentId)) {
+      return next(new ErrorHandler(404, "Invalid content id"));
+    }
+
+    const courseContent = course?.courseData?.find(
+      (item: any) => item._id.toString() === contentId
+    );
+
+    if (!courseContent) {
+      return next(new ErrorHandler(404, "Content not found"));
+    }
+
+    const question = courseContent?.questions?.find(
+      (item: any) => item._id.toString() === questionId
+    );
+    if (!question) {
+      return next(new ErrorHandler(404, "Question not found"));
+    }
+
+    const newAnswer: any = {
+      user: req.user,
+      answer,
+    };
+
+    question.questionReplies.push(newAnswer);
+
+    await course.save();
+
+    if (req.user?._id === question.user._id) {
+      // add notification
+      console.log("same user");
+    } else {
+      await sendEmail({
+        email: question.user.email,
+        subject: "Question Reply",
+        message: `Your question has been replied to.`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      course,
     });
   }
 );
