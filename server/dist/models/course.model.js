@@ -6,6 +6,7 @@ const reviewSchema = new Schema({
         default: 0,
     },
     comment: String,
+    commentReplies: [Object],
 });
 const linkSchema = new Schema({
     title: String,

@@ -184,7 +184,7 @@ export const addQuestion = TryCatch(
 );
 
 //add answer in question
-interface IAddReply {
+interface IAddAnswer {
   questionId: string;
   courseId: string;
   contentId: string;
@@ -193,7 +193,7 @@ interface IAddReply {
 
 export const addAnswer = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { questionId, courseId, contentId, answer } = req.body as IAddReply;
+    const { questionId, courseId, contentId, answer } = req.body as IAddAnswer;
     const course = await Course.findById(courseId);
     if (!course) {
       return next(new ErrorHandler(404, "Course not found"));
@@ -237,6 +237,102 @@ export const addAnswer = TryCatch(
         message: `Your question has been replied to.`,
       });
     }
+
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  }
+);
+
+//add review in course
+interface IAddReview {
+  review: string;
+  courseId: string;
+  rating: number;
+  userId: string;
+}
+
+export const addReview = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const usreCourseLIst = req.user?.courses;
+    const courseId = req.params.id;
+    const isCourseExist = usreCourseLIst?.find(
+      (course) => course.courseId.toString() === courseId
+    );
+    if (!isCourseExist) {
+      return next(
+        new ErrorHandler(404, "You don't have access to this course")
+      );
+    }
+    const course = await Course.findById(courseId);
+
+    const { review, rating } = req.body as IAddReview;
+
+    const reviewData: any = {
+      user: req.user,
+      comment: review,
+      rating,
+    };
+
+    course?.reviews.push(reviewData);
+
+    let avg = 0;
+
+    course?.reviews.forEach((item: any) => {
+      avg += item.rating;
+    });
+
+    if (course) {
+      course.ratings = avg / course?.reviews.length;
+    }
+
+    await course?.save();
+
+    const notification = {
+      title: "New Review",
+      message: `${req.user?.name} has reviewed ${course?.name}`,
+    };
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  }
+);
+
+//add reply in review
+interface IAddReply {
+  reviewId: string;
+  courseId: string;
+  comment: string;
+}
+export const addReply = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { reviewId, courseId, comment } = req.body as IAddReply;
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return next(new ErrorHandler(404, "Course not found"));
+    }
+
+    const review = course?.reviews?.find(
+      (item: any) => item._id.toString() === reviewId
+    );
+
+    if (!review) {
+      return next(new ErrorHandler(404, "Review not found"));
+    }
+    const newReply: any = {
+      user: req.user,
+      comment,
+    };
+
+    if (!review.commentReplies) {
+      review.commentReplies = [];
+    }
+
+    review.commentReplies.push(newReply);
+
+    await course.save();
 
     res.status(200).json({
       success: true,

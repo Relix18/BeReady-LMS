@@ -3,12 +3,12 @@ import ErrorHandler from "../utils/errorHandler.js";
 import { envMode } from "../app.js";
 
 export const errorMiddleware = (
-  err: ErrorHandler,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  err.message ||= "Internal Server Error";
+  err.message = err.message || "Internal Server Error";
   err.status = err.status || 500;
 
   const response: {

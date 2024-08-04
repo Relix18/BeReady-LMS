@@ -1,4 +1,5 @@
 import nodeMailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 type Options = {
   email: string;
@@ -15,7 +16,7 @@ const sendEmail = async (options: Options) => {
       user: process.env.SMTP_MAIL,
       pass: process.env.SMTP_PASSWORD,
     },
-  });
+  } as SMTPTransport.Options);
 
   const mailOptions = {
     from: process.env.SMTP_MAIL,
