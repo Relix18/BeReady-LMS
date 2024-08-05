@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { redis } from "../data/redis.js";
 import mongoose from "mongoose";
 import sendEmail from "../utils/sendMail.js";
+import { Notification } from "../models/notification.model.js";
 //upload course
 export const uploadCourse = TryCatch(async (req, res, next) => {
     const data = req.body;
@@ -123,6 +124,11 @@ export const addQuestion = TryCatch(async (req, res, next) => {
         questionReplies: [],
     };
     courseContent.questions.push(newQuestion);
+    await Notification.create({
+        user: req.user,
+        title: `New Question`,
+        message: `${req.user?.name} has added a new question in ${courseContent.title}`,
+    });
     await course.save();
     res.status(200).json({
         success: true,
@@ -153,8 +159,11 @@ export const addAnswer = TryCatch(async (req, res, next) => {
     question.questionReplies.push(newAnswer);
     await course.save();
     if (req.user?._id === question.user._id) {
-        // add notification
-        console.log("same user");
+        await Notification.create({
+            user: req.user._id,
+            title: `New Question Reply`,
+            message: `${req.user?.name} has replied on your question ${course?.name}`,
+        });
     }
     else {
         await sendEmail({
@@ -191,10 +200,11 @@ export const addReview = TryCatch(async (req, res, next) => {
         course.ratings = avg / course?.reviews.length;
     }
     await course?.save();
-    const notification = {
-        title: "New Review",
+    await Notification.create({
+        user: req.user,
+        title: `New Review`,
         message: `${req.user?.name} has reviewed ${course?.name}`,
-    };
+    });
     res.status(200).json({
         success: true,
         course,
