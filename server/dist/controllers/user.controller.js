@@ -237,3 +237,16 @@ export const updateUserRole = TryCatch(async (req, res, next) => {
     await user.save();
     res.status(200).json({ success: true, user });
 });
+//delete user --admin
+export const deleteUser = TryCatch(async (req, res, next) => {
+    const id = req.params.id;
+    const user = await User.findById(id);
+    if (!user) {
+        return next(new ErrorHandler(404, "User not found"));
+    }
+    await user.deleteOne();
+    await redis.del(id);
+    res
+        .status(200)
+        .json({ success: true, message: "User deleted successfully" });
+});

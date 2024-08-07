@@ -236,6 +236,20 @@ export const addReply = TryCatch(async (req, res, next) => {
 });
 //get all course -- for admin
 export const getAllCourses = TryCatch(async (req, res, next) => {
-    const users = await Course.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, users });
+    const courses = await Course.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, courses });
+});
+//delete course --admin
+export const deleteCourse = TryCatch(async (req, res, next) => {
+    const { id } = req.params;
+    const course = await Course.findById(req.params.id);
+    if (!course) {
+        return next(new ErrorHandler(404, "Course not found"));
+    }
+    await course.deleteOne();
+    await redis.del(id);
+    res.status(200).json({
+        success: true,
+        message: "Course deleted successfully",
+    });
 });

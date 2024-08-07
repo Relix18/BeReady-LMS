@@ -1,6 +1,7 @@
 import express from "express";
 import {
   activateUser,
+  deleteUser,
   getAllUser,
   getUserById,
   login,
@@ -29,5 +30,6 @@ router.put("/update-password", isAuthenticated, updatePassword);
 router.put("/update-avatar", isAuthenticated, updateAvatar);
 router.get("/all-users", isAuthenticated, isAuthorized, getAllUser);
 router.put("/update-user", isAuthenticated, isAuthorized, updateUserRole);
+router.delete("/delete-user/:id", isAuthenticated, isAuthorized, deleteUser);
 
 export default router;
