@@ -221,3 +221,19 @@ export const updateAvatar = TryCatch(async (req, res, next) => {
     await redis.set(id, JSON.stringify(user));
     res.status(200).json({ success: true, user });
 });
+//get all user --admin
+export const getAllUser = TryCatch(async (req, res, next) => {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, users });
+});
+//update user role --admin
+export const updateUserRole = TryCatch(async (req, res, next) => {
+    const { id, role } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+        return next(new ErrorHandler(404, "User not found"));
+    }
+    user.role = role;
+    await user.save();
+    res.status(200).json({ success: true, user });
+});

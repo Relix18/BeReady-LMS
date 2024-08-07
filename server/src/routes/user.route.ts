@@ -1,6 +1,7 @@
 import express from "express";
 import {
   activateUser,
+  getAllUser,
   getUserById,
   login,
   logout,
@@ -10,6 +11,7 @@ import {
   updateAvatar,
   updatePassword,
   updateProfile,
+  updateUserRole,
 } from "../controllers/user.controller.js";
 import { isAuthenticated, isAuthorized } from "../middlewares/auth.js";
 
@@ -25,5 +27,7 @@ router.post("/social-auth", socialAuth);
 router.put("/update-profile", isAuthenticated, updateProfile);
 router.put("/update-password", isAuthenticated, updatePassword);
 router.put("/update-avatar", isAuthenticated, updateAvatar);
+router.get("/all-users", isAuthenticated, isAuthorized, getAllUser);
+router.put("/update-user", isAuthenticated, isAuthorized, updateUserRole);
 
 export default router;

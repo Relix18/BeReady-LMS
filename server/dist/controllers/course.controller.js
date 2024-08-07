@@ -75,7 +75,7 @@ export const getSingleCourse = TryCatch(async (req, res, next) => {
     });
 });
 //get all courses -- for all users
-export const getAllCourses = TryCatch(async (req, res, next) => {
+export const getAllCourse = TryCatch(async (req, res, next) => {
     const isCourseExist = await redis.get("allCourses");
     if (isCourseExist) {
         const courses = JSON.parse(isCourseExist);
@@ -233,4 +233,9 @@ export const addReply = TryCatch(async (req, res, next) => {
         success: true,
         course,
     });
+});
+//get all course -- for admin
+export const getAllCourses = TryCatch(async (req, res, next) => {
+    const users = await Course.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, users });
 });

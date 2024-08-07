@@ -39,3 +39,8 @@ export const createOrder = TryCatch(async (req, res, next) => {
         order,
     });
 });
+//get all order -- for admin
+export const getAllOrder = TryCatch(async (req, res, next) => {
+    const users = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, users });
+});
