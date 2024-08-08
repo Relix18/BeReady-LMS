@@ -8,6 +8,7 @@ import course from "./routes/course.route.js";
 import order from "./routes/order.route.js";
 import notification from "./routes/notification.route.js";
 import analytics from "./routes/analytics.route.js";
+import layout from "./routes/layout.route.js";
 
 export const app = express();
 dotenv.config({ path: ".env" });
@@ -32,6 +33,7 @@ app.use("/api/v1", course);
 app.use("/api/v1", order);
 app.use("/api/v1", notification);
 app.use("/api/v1", analytics);
+app.use("/api/v1", layout);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello");
