@@ -6,9 +6,9 @@ import Hero from "./components/Route/Hero";
 
 interface Props {}
 
-const Page: FC<Props> = ({ props }) => {
+const Page: FC<Props> = () => {
   const [open, setOpen] = useState(false);
-
+  const [route, setRoute] = useState("Login");
   const [activeItem, setActiveItem] = useState(0);
 
   return (
@@ -18,7 +18,13 @@ const Page: FC<Props> = ({ props }) => {
         description="BeReady is a learning platform for students"
         keywords="Promming, MERN, Redux"
       />
-      <Header open={open} setOpen={setOpen} activeItem={activeItem} />
+      <Header
+        open={open}
+        setOpen={setOpen}
+        activeItem={activeItem}
+        setRoute={setRoute}
+        route={route}
+      />
       <Hero />
     </div>
   );

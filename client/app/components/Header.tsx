@@ -4,14 +4,20 @@ import React, { FC, useState } from "react";
 import NavItems from "../utils/NavItems";
 import { ThemeSwitcher } from "../utils/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
+import CustomModel from "../utils/CustomModel";
+import Login from "./auth/Login";
+import Signup from "./auth/Signup";
+import Verification from "./auth/Verification";
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
   activeItem: number;
+  route: string;
+  setRoute: (route: string) => void;
 };
 
-const Header: FC<Props> = ({ open, setOpen, activeItem }) => {
+const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
 
@@ -23,7 +29,7 @@ const Header: FC<Props> = ({ open, setOpen, activeItem }) => {
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 80) {
+      if (window.scrollY > 85) {
         setActive(true);
       } else {
         setActive(false);
@@ -32,7 +38,7 @@ const Header: FC<Props> = ({ open, setOpen, activeItem }) => {
   }
 
   return (
-    <div>
+    <div className="w-full relative">
       <div
         className={`${
           active
@@ -91,6 +97,33 @@ const Header: FC<Props> = ({ open, setOpen, activeItem }) => {
           </div>
         )}
       </div>
+      {route === "Login" && open && (
+        <CustomModel
+          open={open}
+          setOpen={setOpen}
+          setRoute={setRoute}
+          Component={Login}
+          activeItem={activeItem}
+        />
+      )}
+      {route === "Signup" && open && (
+        <CustomModel
+          open={open}
+          setOpen={setOpen}
+          setRoute={setRoute}
+          Component={Signup}
+          activeItem={activeItem}
+        />
+      )}
+      {route === "Verification" && open && (
+        <CustomModel
+          open={open}
+          setOpen={setOpen}
+          setRoute={setRoute}
+          Component={Verification}
+          activeItem={activeItem}
+        />
+      )}
     </div>
   );
 };

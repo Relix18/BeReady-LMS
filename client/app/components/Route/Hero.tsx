@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { FC } from "react";
 import { BiSearch } from "react-icons/bi";
-import hero from "@/public/assets/learning.png";
-import client1 from "@/public/assets/client1.svg";
-import client2 from "@/public/assets/client2.svg";
+import hero from "@/public/assets/hero.png";
+import client1 from "@/public/assets/client2.png";
+import client2 from "@/public/assets/client1.png";
 import client3 from "@/public/assets/client3.png";
 
 type props = {};
@@ -12,8 +12,8 @@ type props = {};
 const Hero: FC<props> = () => {
   return (
     <div className="w-full 1000px:flex items-center">
-      <div className="absolute top-[100px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[600px] 1100px:w-[600px] h-[50vh] w-[50vh] hero_animation rounded-full"></div>
-      <div className="1000px:w-[40%] flex 1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt[0] z-10">
+      <div className="absolute top-[100px] left-[unset] 1000px:left-[50px] 1000px:top-[unset] 1500px:h-[700px] 1500px:w-[700px] 1100px:h-[600px] 1100px:w-[600px] h-[50vh] w-[50vh] hero_animation rounded-full" />
+      <div className="1000px:w-[40%] flex 1000px:min-h-screen items-center justify-end pt-[70px] 1000px:pt[0] z-10 ">
         <Image
           src={hero}
           alt=""
