@@ -45,6 +45,9 @@ export const register = TryCatch(async (req, res, next) => {
 export const activateUser = TryCatch(async (req, res, next) => {
     const { activationCode } = req.body;
     const { activation } = req.cookies;
+    if (!activation) {
+        return next(new ErrorHandler(400, "Activation code expired. Try again"));
+    }
     const newUser = jwt.verify(activation, process.env.JWT_SECRET);
     if (newUser.activationCode !== activationCode) {
         return next(new ErrorHandler(400, "Invalid activation code"));

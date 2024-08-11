@@ -70,6 +70,10 @@ export const activateUser = TryCatch(
     const { activationCode } = req.body;
     const { activation } = req.cookies;
 
+    if (!activation) {
+      return next(new ErrorHandler(400, "Activation code expired. Try again"));
+    }
+
     const newUser: { user: IUser; activationCode: string } = jwt.verify(
       activation,
       process.env.JWT_SECRET as string

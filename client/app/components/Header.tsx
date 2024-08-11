@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import NavItems from "../utils/NavItems";
 import { ThemeSwitcher } from "../utils/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
@@ -20,6 +20,12 @@ type Props = {
 const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
+
+  useEffect(() => {
+    if (!open && route === "Verification") {
+      setRoute("Login");
+    }
+  }, [open, setRoute, route]);
 
   const handleClose = (e: any) => {
     if (e.target.id === "screen") {
