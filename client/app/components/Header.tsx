@@ -113,7 +113,10 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
                       alt="avatar"
                       width={30}
                       height={30}
-                      className="hidden 800px:block rounded-full cursor-pointer"
+                      className="w-[30px] h-[30px] hidden 800px:block rounded-full cursor-pointer"
+                      style={{
+                        border: activeItem === 5 ? "2px solid #37a39a" : "none",
+                      }}
                     />
                   </Link>
                 </>
@@ -122,6 +125,9 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
                   size={25}
                   className="hidden 800px:block cursor-pointer dark:text-white text-black"
                   onClick={() => setOpen(true)}
+                  style={{
+                    border: activeItem === 5 ? "2px solid #37a39a" : "none",
+                  }}
                 />
               )}
             </div>

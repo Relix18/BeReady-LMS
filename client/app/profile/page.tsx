@@ -11,7 +11,7 @@ type Props = {};
 const page: FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("Login");
-  const [activeItem, setActiveItem] = useState(0);
+  const [activeItem, setActiveItem] = useState(5);
   const { user } = useSelector((state: any) => state.auth);
 
   console.log(user);
