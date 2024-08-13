@@ -31,14 +31,12 @@ const Signup: React.FC<Props> = ({ setRoute }) => {
   useEffect(() => {
     if (isSuccess) {
       const message = data?.message || "Registered successfully";
-      console.log(data);
       toast.success(message);
       setRoute("Verification");
     }
 
     if (error) {
       const { data } = error as any;
-      console.log(data?.message);
       toast.error(data?.message);
     }
   }, [isSuccess, error]);
