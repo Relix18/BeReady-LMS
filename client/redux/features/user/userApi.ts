@@ -10,7 +10,27 @@ export const userApi = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    updateUser: builder.mutation({
+      query: ({ name }) => ({
+        url: "update-profile",
+        method: "PUT",
+        body: { name },
+        credentials: "include",
+      }),
+    }),
+    updatePassword: builder.mutation({
+      query: ({ oldPassword, newPassword }) => ({
+        url: "update-password",
+        method: "PUT",
+        body: { oldPassword, newPassword },
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
-export const { useUpdateAvatarMutation } = userApi;
+export const {
+  useUpdateAvatarMutation,
+  useUpdateUserMutation,
+  useUpdatePasswordMutation,
+} = userApi;

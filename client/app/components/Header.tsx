@@ -45,12 +45,12 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
           avatar: data.user?.image,
         });
       }
-    }
-    if (data === null && isSuccess) {
-      toast.success("Login Successful");
-    }
-    if (data === null) {
-      setLogout(true);
+      if (data === null && isSuccess) {
+        toast.success("Login Successful");
+      }
+      if (data === null) {
+        setLogout(true);
+      }
     }
   }, [data, user]);
 

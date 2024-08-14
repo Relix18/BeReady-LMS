@@ -3,7 +3,10 @@ import React, { FC, useEffect, useState } from "react";
 import avatarIcon from "../../../public/assets/user.png";
 import { AiOutlineCamera } from "react-icons/ai";
 import { styles } from "../../../app/styles/style";
-import { useUpdateAvatarMutation } from "@/redux/features/user/userApi";
+import {
+  useUpdateAvatarMutation,
+  useUpdateUserMutation,
+} from "@/redux/features/user/userApi";
 import toast from "react-hot-toast";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 
@@ -16,7 +19,8 @@ const ProfileInfo: FC<Props> = ({ user, avatar }) => {
   const [name, setName] = useState(user && user.name);
   const [loadUser, setLoadUser] = useState(false);
   const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
-
+  const [udpateProfile, { isSuccess: isSuccessProfile, error: errorProfile }] =
+    useUpdateUserMutation();
   const {} = useLoadUserQuery(undefined, { skip: true });
 
   const imageHandler = async (e: any) => {
@@ -41,9 +45,18 @@ const ProfileInfo: FC<Props> = ({ user, avatar }) => {
     }
   }, [isSuccess, error]);
 
+  useEffect(() => {
+    if (isSuccessProfile) {
+      toast.success("Profile updated successfully");
+    }
+    if (errorProfile) {
+      console.log(errorProfile);
+    }
+  }, [isSuccessProfile, errorProfile]);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("hello");
+    await udpateProfile({ name });
   };
 
   return (
