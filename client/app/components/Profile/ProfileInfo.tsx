@@ -79,7 +79,7 @@ const ProfileInfo: FC<Props> = ({ user, avatar }) => {
             accept="image/png,image/jpg,image/jpeg, image/webp"
           />
           <label htmlFor="avatar">
-            <div className="w-[30px] h-[30px] bg-slate-900 rounded-full absolute bottom-2 right-2 flex items-center justify-center cursor-pointer">
+            <div className="w-[30px] h-[30px] dark:bg-slate-900 bg-[#e9e9e9] dark:text-white text-black rounded-full absolute bottom-2 right-2 flex items-center justify-center cursor-pointer">
               <AiOutlineCamera size={20} className="z-1" />
             </div>
           </label>
@@ -111,7 +111,7 @@ const ProfileInfo: FC<Props> = ({ user, avatar }) => {
               />
             </div>
             <input
-              className="w-full 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-[#fff] text-black rounded-[3px] mt-8 cursor-pointer"
+              className="w-[95%] 800px:w-[250px] h-[40px] border border-[#37a39a] text-center dark:text-[#fff] text-black rounded-[3px] font-Poppins mt-8 cursor-pointer"
               value={"Update"}
               type="submit"
             />
