@@ -155,7 +155,7 @@ const Sidebar = () => {
             <Item
               title="Dashboard"
               to={"/admin"}
-              icon={<IoHomeOutline />}
+              icon={<IoHomeOutline size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -169,14 +169,14 @@ const Sidebar = () => {
             <Item
               title="Users"
               to={"/admin/users"}
-              icon={<IoPeople />}
+              icon={<IoPeople size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Invoices"
               to={"/admin/invoices"}
-              icon={<IoReceipt />}
+              icon={<IoReceipt size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -191,14 +191,14 @@ const Sidebar = () => {
             <Item
               title="Create Course"
               to={"/admin/create-course"}
-              icon={<MdVideoCall />}
+              icon={<MdVideoCall size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Live Courses"
               to={"/admin/courses"}
-              icon={<MdOndemandVideo />}
+              icon={<MdOndemandVideo size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -212,14 +212,14 @@ const Sidebar = () => {
             <Item
               title="Hero"
               to={"/admin/hero"}
-              icon={<MdWeb />}
+              icon={<MdWeb size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="FAQ"
               to={"/admin/faq"}
-              icon={<MdQuiz />}
+              icon={<MdQuiz size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -233,7 +233,7 @@ const Sidebar = () => {
             <Item
               title="Manage Team"
               to={"/admin/team"}
-              icon={<MdPeopleOutline />}
+              icon={<MdPeopleOutline size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -247,21 +247,21 @@ const Sidebar = () => {
             <Item
               title="CourseAnalytics"
               to={"/admin/course-analytics"}
-              icon={<IoBarChartOutline />}
+              icon={<IoBarChartOutline size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Orders Analytics"
               to={"/admin/orders-analytics"}
-              icon={<IoMapOutline />}
+              icon={<IoMapOutline size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Users Analytics"
               to={"/admin/users-analytics"}
-              icon={<MdManageHistory />}
+              icon={<MdManageHistory size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -275,7 +275,7 @@ const Sidebar = () => {
             <Item
               title="Settings"
               to={"/admin/settings"}
-              icon={<IoSettingsOutline />}
+              icon={<IoSettingsOutline size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -283,7 +283,7 @@ const Sidebar = () => {
               <Item
                 title="Logout"
                 to={"/"}
-                icon={<IoLogOutOutline />}
+                icon={<IoLogOutOutline size={isCollapsed ? 20 : 14} />}
                 selected={selected}
                 setSelected={setSelected}
               />
