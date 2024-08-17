@@ -41,13 +41,13 @@ const CoursePreview: FC<Props> = ({
           />
         </div>
         <div className="flex items-center">
-          <h1 className="pt-5 text-[25px]">
+          <h1 className="pt-5 text-[25px] text-black dark:text-white">
             {courseData?.price === 0 ? "Free" : courseData?.price + "$"}
           </h1>
-          <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80">
+          <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
             {courseData?.estimatedPrice}$
           </h5>
-          <h4 className="pl-5 pt-4 text-[22px]">
+          <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
             {discountPercentagePrice + "% off"}
           </h4>
         </div>
@@ -72,56 +72,72 @@ const CoursePreview: FC<Props> = ({
             Apply
           </div>
         </div>
-        <p className="pb-1">* Source code included</p>
-        <p className="pb-1">* Full lifetime access</p>
-        <p className="pb-1">* Certificate of completion</p>
-        <p className="pb-3 800px:pb-1">* Premium Support</p>
+        <p className="pb-1 text-black dark:text-white">
+          * Source code included
+        </p>
+        <p className="pb-1 text-black dark:text-white">
+          * Full lifetime access
+        </p>
+        <p className="pb-1 text-black dark:text-white">
+          * Certificate of completion
+        </p>
+        <p className="pb-3 text-black dark:text-white 800px:pb-1">
+          * Premium Support
+        </p>
       </div>
       <div className="w-full">
         <div className="w-full 800px:pr-5">
-          <h1 className="text-[25px] font-Poppins font-[600]">
+          <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
             {courseData?.name}
           </h1>
           <div className="flex items-center justify-between pt-3">
             <div className="flex items-center">
               <Ratings rating={0} />
-              <h5>0 Reviews</h5>
+              <h5 className="text-black dark:text-white">0 Reviews</h5>
             </div>
-            <h5>0 Students</h5>
+            <h5 className="text-black dark:text-white">0 Students</h5>
           </div>
         </div>
         <br />
-        <h1 className="text-[25px] font-Poppins font-[600]">
+        <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
           What you will learn from this course?
         </h1>
         {courseData?.benefits?.map((benefit: any, index: number) => (
           <div key={index} className="w-full flex 800px:items-center py-2">
             <div className="w-[15px] mr-1">
-              <IoCheckmarkDoneOutline size={20} />
+              <IoCheckmarkDoneOutline
+                size={20}
+                className="text-black dark:text-white"
+              />
             </div>
-            <p className="pl-2">{benefit.title}</p>
+            <p className="pl-2 text-black dark:text-white">{benefit.title}</p>
           </div>
         ))}
         <br />
         <br />
-        <h1 className="text-[25px] font-Poppins font-[600]">
+        <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
           What are the prerequisites for this course?
         </h1>
         {courseData?.prerequisites?.map((prerequisite: any, index: number) => (
           <div key={index} className="w-full flex 800px:items-center py-2">
             <div className="w-[15px] mr-1">
-              <IoCheckmarkDoneOutline size={20} />
+              <IoCheckmarkDoneOutline
+                size={20}
+                className="text-black dark:text-white"
+              />
             </div>
-            <p className="pl-2">{prerequisite.title}</p>
+            <p className="pl-2 text-black dark:text-white">
+              {prerequisite.title}
+            </p>
           </div>
         ))}
         <br />
         <br />
         <div className="w-full">
-          <h1 className="text-[25px] font-Poppins font-[600]">
+          <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
             Course Details
           </h1>
-          <p className="text-[18px] mt-[20px] whitespace-pre-line overflow-hidden">
+          <p className="text-[18px] mt-[20px] whitespace-pre-line overflow-hidden text-black dark:text-white">
             {courseData?.description}
           </p>
         </div>

@@ -34,6 +34,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
             width: "90%",
             height: "100%",
             border: "none",
+            zIndex: -1,
           }}
           allow="encrypted-media"
           allowFullScreen={true}
