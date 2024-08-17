@@ -7,6 +7,7 @@ import { redis } from "../data/redis.js";
 import mongoose from "mongoose";
 import sendEmail from "../utils/sendMail.js";
 import { Notification } from "../models/notification.model.js";
+import axios from "axios";
 
 //upload course
 export const uploadCourse = TryCatch(
@@ -377,5 +378,26 @@ export const deleteCourse = TryCatch(
       success: true,
       message: "Course deleted successfully",
     });
+  }
+);
+
+//genrate video url
+export const generateVideoUrl = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { videoId } = req.body;
+    const response = await axios.post(
+      `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+      {
+        ttl: 300,
+      },
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Apisecret ${process.env.VDOCIPHER_API_SECRET}`,
+        },
+      }
+    );
+    res.json(response.data);
   }
 );
