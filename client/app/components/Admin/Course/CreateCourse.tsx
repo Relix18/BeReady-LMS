@@ -1,16 +1,34 @@
 "use client";
 
 import { title } from "process";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CourseInformation from "./CourseInformation";
 import CourseOptions from "./CourseOptions";
 import CourseData from "./CourseData";
 import CourseContent from "./CourseContent";
 import CoursePreview from "./CoursePreview";
+import { useCreateCourseMutation } from "@/redux/features/course/courseAPI";
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
+import Loader from "../../Loader/Loader";
 
 type Props = {};
 
 const CreateCourse = (props: Props) => {
+  const [CreateCourse, { isLoading, isSuccess, error }] =
+    useCreateCourseMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Course created successfully");
+      redirect("/admin/courses");
+    }
+    if (error) {
+      const err = error as any;
+      toast.error(err.data.message);
+    }
+  }, [isLoading, isSuccess, error]);
+
   const [active, setActive] = useState(0);
   const [courseInfo, setCourseInfo] = useState({
     name: "",
@@ -78,52 +96,58 @@ const CreateCourse = (props: Props) => {
 
   const handleCourseCreate = async () => {
     const data = courseData;
-    console.log(data);
+    await CreateCourse(data);
   };
 
   return (
-    <div className="w-full flex min-h-screen">
-      <div className="w-[80%]">
-        {active === 0 && (
-          <CourseInformation
-            active={active}
-            setActive={setActive}
-            courseInfo={courseInfo}
-            setCourseInfo={setCourseInfo}
-          />
-        )}
-        {active === 1 && (
-          <CourseData
-            active={active}
-            setActive={setActive}
-            benefits={benefits}
-            setBenefits={setBenefits}
-            prerequisites={prerequisites}
-            setPrerequisites={setPrerequisites}
-          />
-        )}
-        {active === 2 && (
-          <CourseContent
-            active={active}
-            setActive={setActive}
-            courseContentData={courseContentData}
-            setCourseContentData={setCourseContentData}
-            handleSubmit={handleSubmit}
-          />
-        )}
-        {active === 3 && (
-          <CoursePreview
-            active={active}
-            setActive={setActive}
-            courseData={courseData}
-            handleCourseCreate={handleCourseCreate}
-          />
-        )}
-      </div>
-      <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
-        <CourseOptions active={active} setActive={setActive} />
-      </div>
-    </div>
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="w-full flex min-h-screen">
+          <div className="w-[80%]">
+            {active === 0 && (
+              <CourseInformation
+                active={active}
+                setActive={setActive}
+                courseInfo={courseInfo}
+                setCourseInfo={setCourseInfo}
+              />
+            )}
+            {active === 1 && (
+              <CourseData
+                active={active}
+                setActive={setActive}
+                benefits={benefits}
+                setBenefits={setBenefits}
+                prerequisites={prerequisites}
+                setPrerequisites={setPrerequisites}
+              />
+            )}
+            {active === 2 && (
+              <CourseContent
+                active={active}
+                setActive={setActive}
+                courseContentData={courseContentData}
+                setCourseContentData={setCourseContentData}
+                handleSubmit={handleSubmit}
+              />
+            )}
+            {active === 3 && (
+              <CoursePreview
+                active={active}
+                setActive={setActive}
+                courseData={courseData}
+                handleCourseCreate={handleCourseCreate}
+              />
+            )}
+          </div>
+          <div className="w-[20%] mt-[100px] h-screen fixed z-[-1] top-18 right-0">
+            <CourseOptions active={active} setActive={setActive} />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

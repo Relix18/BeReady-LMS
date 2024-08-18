@@ -23,13 +23,41 @@ router.post("/activation", activateUser);
 router.post("/login", login);
 router.get("/logout", isAuthenticated, logout);
 router.get("/refresh-token", updateAccessToken);
-router.get("/me", isAuthenticated, getUserById);
+router.get("/me", updateAccessToken, isAuthenticated, getUserById);
 router.post("/social-auth", socialAuth);
-router.put("/update-profile", isAuthenticated, updateProfile);
-router.put("/update-password", isAuthenticated, updatePassword);
-router.put("/update-avatar", isAuthenticated, updateAvatar);
-router.get("/all-users", isAuthenticated, isAuthorized, getAllUser);
-router.put("/update-user", isAuthenticated, isAuthorized, updateUserRole);
-router.delete("/delete-user/:id", isAuthenticated, isAuthorized, deleteUser);
+router.put(
+  "/update-profile",
+  updateAccessToken,
+  isAuthenticated,
+  updateProfile
+);
+router.put(
+  "/update-password",
+  updateAccessToken,
+  isAuthenticated,
+  updatePassword
+);
+router.put("/update-avatar", updateAccessToken, isAuthenticated, updateAvatar);
+router.get(
+  "/all-users",
+  updateAccessToken,
+  isAuthenticated,
+  isAuthorized,
+  getAllUser
+);
+router.put(
+  "/update-user",
+  updateAccessToken,
+  isAuthenticated,
+  isAuthorized,
+  updateUserRole
+);
+router.delete(
+  "/delete-user/:id",
+  updateAccessToken,
+  isAuthenticated,
+  isAuthorized,
+  deleteUser
+);
 
 export default router;

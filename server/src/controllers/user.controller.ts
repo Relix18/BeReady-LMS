@@ -192,7 +192,7 @@ export const updateAccessToken = TryCatch(
 
     await redis.set(user._id, JSON.stringify(user), "EX", 604800);
 
-    res.status(200).json({ success: true, accessToken });
+    next();
   }
 );
 

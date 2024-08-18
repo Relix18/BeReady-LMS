@@ -117,7 +117,7 @@ export const updateAccessToken = TryCatch(async (req, res, next) => {
     res.cookie("access_token", accessToken, accessTokenOption);
     res.cookie("refresh_token", refreshToken, refreshTokenOption);
     await redis.set(user._id, JSON.stringify(user), "EX", 604800);
-    res.status(200).json({ success: true, accessToken });
+    next();
 });
 //get user by id
 export const getUserById = TryCatch(async (req, res, next) => {
