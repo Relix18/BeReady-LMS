@@ -117,7 +117,7 @@ export const updateAccessToken = TryCatch(async (req, res, next) => {
     res.cookie("access_token", accessToken, accessTokenOption);
     res.cookie("refresh_token", refreshToken, refreshTokenOption);
     await redis.set(user._id, JSON.stringify(user), "EX", 604800);
-    next();
+    return next();
 });
 //get user by id
 export const getUserById = TryCatch(async (req, res, next) => {
@@ -232,10 +232,10 @@ export const getAllUser = TryCatch(async (req, res, next) => {
 });
 //update user role --admin
 export const updateUserRole = TryCatch(async (req, res, next) => {
-    const { id, role } = req.body;
-    const user = await User.findById(id);
+    const { email, role } = req.body;
+    const user = await User.findOne({ email });
     if (!user) {
-        return next(new ErrorHandler(404, "User not found"));
+        return next(new ErrorHandler(400, "User not found"));
     }
     user.role = role;
     await user.save();
