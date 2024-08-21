@@ -17,8 +17,6 @@ export const uploadCourse = TryCatch(
     if (thumbnail) {
       const myCloud = await cloudinary.uploader.upload(thumbnail, {
         folder: "courses",
-        width: 150,
-        crop: "scale",
       });
       data.thumbnail = {
         public_id: myCloud.public_id,
@@ -40,12 +38,15 @@ export const editCourse = TryCatch(
     if (!data) {
       return next(new ErrorHandler(400, "Please provide data"));
     }
+    const courseData = await Course.findById(req.params.id);
+
     const thumbnail = data.thumbnail;
     if (thumbnail) {
+      if (courseData) {
+        await cloudinary.uploader.destroy(courseData.thumbnail.public_id);
+      }
       const myCloud = await cloudinary.uploader.upload(thumbnail, {
         folder: "courses",
-        width: 150,
-        crop: "scale",
       });
       data.thumbnail = {
         public_id: myCloud.public_id,
@@ -364,12 +365,17 @@ export const getAllCourses = TryCatch(
 );
 
 //delete course --admin
+
 export const deleteCourse = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const course = await Course.findById(req.params.id);
     if (!course) {
       return next(new ErrorHandler(404, "Course not found"));
+    }
+
+    if (course.thumbnail?.public_id) {
+      await cloudinary.uploader.destroy(course.thumbnail.public_id);
     }
 
     await course.deleteOne();

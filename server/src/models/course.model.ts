@@ -30,12 +30,17 @@ interface ICourseData extends Document {
   questions: IComment[];
 }
 
+interface IThumbnail extends Document {
+  public_id: string;
+  url: string;
+}
+
 interface ICourse extends Document {
   name: string;
   description?: string;
   price: number;
   estimatedPrice: number;
-  thumbnail: object;
+  thumbnail: IThumbnail;
   tags: string;
   level: string;
   demoUrl: string;
