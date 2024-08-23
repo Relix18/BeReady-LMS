@@ -14,7 +14,7 @@ const layoutSchema = new Schema({
     type: String,
     faqs: [faqSchema],
     categories: [categorySchema],
-    bannerImage: {
+    banner: {
         image: bannerImageSchema,
         title: String,
         subtitle: String,

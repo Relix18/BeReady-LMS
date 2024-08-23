@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.post("/create-layout", isAuthenticated, isAuthorized, createLayout);
 router.put("/edit-layout", isAuthenticated, isAuthorized, editLayout);
-router.get("/get-layout", getLayout);
+router.get("/get-layout/:type", getLayout);
 
 export default router;
