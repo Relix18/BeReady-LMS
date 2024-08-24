@@ -90,6 +90,7 @@ export const editLayout = TryCatch(async (req, res, next) => {
     }
     if (type === "Categories") {
         const { categories } = req.body;
+        console.log(categories);
         const categoryData = await Layout.findOne({ type: "Categories" });
         const categoryItems = await Promise.all(categories.map(async (item) => {
             return {

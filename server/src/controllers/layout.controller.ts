@@ -117,6 +117,7 @@ export const editLayout = TryCatch(
     }
     if (type === "Categories") {
       const { categories } = req.body;
+      console.log(categories);
       const categoryData: any = await Layout.findOne({ type: "Categories" });
       const categoryItems = await Promise.all(
         categories.map(async (item: any) => {

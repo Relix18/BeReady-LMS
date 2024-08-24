@@ -82,6 +82,7 @@ const CourseContent: FC<Props> = ({
     if (
       courseContentData[courseContentData.length - 1].title === "" ||
       courseContentData[courseContentData.length - 1].videoUrl === "" ||
+      courseContentData[courseContentData.length - 1].videoLength === "" ||
       courseContentData[courseContentData.length - 1].description === "" ||
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
       courseContentData[courseContentData.length - 1].links[0].url === ""
@@ -93,6 +94,7 @@ const CourseContent: FC<Props> = ({
       const newContent = {
         title: "",
         videoUrl: "",
+        videoLength: "",
         description: "",
         videoSection: `Untitled Section ${activeSection + 1}`,
         links: [{ title: "", url: "" }],
@@ -109,6 +111,7 @@ const CourseContent: FC<Props> = ({
     if (
       courseContentData[courseContentData.length - 1].title === "" ||
       courseContentData[courseContentData.length - 1].videoUrl === "" ||
+      courseContentData[courseContentData.length - 1].videoLength === "" ||
       courseContentData[courseContentData.length - 1].description === "" ||
       courseContentData[courseContentData.length - 1].links[0].title === "" ||
       courseContentData[courseContentData.length - 1].links[0].url === ""
@@ -221,6 +224,22 @@ const CourseContent: FC<Props> = ({
                         onChange={(e) => {
                           const updateData = [...courseContentData];
                           updateData[index].videoUrl = e.target.value;
+                          setCourseContentData(updateData);
+                        }}
+                      />
+                    </div>
+                    <div className="my-3">
+                      <label className={`${styles.label}`}>
+                        Video Length (in mins)
+                      </label>
+                      <input
+                        type="number"
+                        className={`${styles.input}`}
+                        placeholder="20"
+                        value={item.videoLength}
+                        onChange={(e) => {
+                          const updateData = [...courseContentData];
+                          updateData[index].videoLength = e.target.value;
                           setCourseContentData(updateData);
                         }}
                       />

@@ -38,6 +38,7 @@ interface IThumbnail extends Document {
 interface ICourse extends Document {
   name: string;
   description?: string;
+  category: string;
   price: number;
   estimatedPrice: number;
   thumbnail: IThumbnail;
@@ -93,6 +94,10 @@ const courseSchema = new Schema<ICourse>(
     description: {
       type: String,
       required: [true, "Description is required"],
+    },
+    category: {
+      type: String,
+      required: [true, "Category is required"],
     },
     price: {
       type: Number,

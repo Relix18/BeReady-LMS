@@ -280,13 +280,7 @@ const Sidebar = () => {
             >
               {!isCollapsed && "Extras"}
             </Typography>
-            <Item
-              title="Settings"
-              to={"/admin/settings"}
-              icon={<IoSettingsOutline size={isCollapsed ? 20 : 14} />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+
             <div onClick={logoutHandler}>
               <Item
                 title="Logout"

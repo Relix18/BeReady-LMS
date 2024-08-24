@@ -1,6 +1,7 @@
 import { styles } from "@/app/styles/style";
+import { useGetLayoutQuery } from "@/redux/features/layout/layoutAPI";
 import Image from "next/image";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { BiCloudUpload } from "react-icons/bi";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
@@ -18,6 +19,13 @@ const CourseInformation: FC<Props> = ({
   setActive,
 }) => {
   const [dragging, setDragging] = useState(false);
+  const { data } = useGetLayoutQuery("Categories");
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    if (data) {
+      setCategories(data?.layout.categories);
+    }
+  }, [data]);
 
   const handleFileChange = (e: any) => {
     const file = e.target.files[0];
@@ -132,20 +140,40 @@ const CourseInformation: FC<Props> = ({
           </div>
         </div>
         <br />
-        <div>
-          <label className={`${styles.label}`}>Course Tags</label>
-          <input
-            type="text"
-            name=""
-            required
-            id="tags"
-            className={`${styles.input}`}
-            value={courseInfo.tags}
-            onChange={(e) =>
-              setCourseInfo({ ...courseInfo, tags: e.target.value })
-            }
-          />
+        <div className="w-full flex justify-between">
+          <div className="w-[45%]">
+            <label className={`${styles.label}`}>Course Tags</label>
+            <input
+              type="text"
+              name=""
+              required
+              id="tags"
+              className={`${styles.input}`}
+              value={courseInfo.tags}
+              onChange={(e) =>
+                setCourseInfo({ ...courseInfo, tags: e.target.value })
+              }
+            />
+          </div>
+          <div className="w-[45%]">
+            <label htmlFor="">Course Category</label>
+            <select
+              className={`${styles.input} dark:bg-gray-900`}
+              value={courseInfo.category}
+              onChange={(e) =>
+                setCourseInfo({ ...courseInfo, category: e.target.value })
+              }
+            >
+              <option value={""}>Select Category</option>
+              {categories.map((item: any) => (
+                <option value={item.title} key={item._id}>
+                  {item.title}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
         <br />
         <div className="w-full flex justify-between">
           <div className="w-[45%]">

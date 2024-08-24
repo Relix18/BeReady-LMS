@@ -36,6 +36,10 @@ const courseSchema = new Schema({
         type: String,
         required: [true, "Description is required"],
     },
+    category: {
+        type: String,
+        required: [true, "Category is required"],
+    },
     price: {
         type: Number,
         required: [true, "Price is required"],

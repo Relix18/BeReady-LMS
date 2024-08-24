@@ -38,6 +38,7 @@ const CreateCourse = (props: Props) => {
     thumbnail: "",
     tags: "",
     level: "",
+    category: "",
     demoUrl: "",
   });
   const [benefits, setBenefits] = useState([{ title: "" }]);
@@ -47,6 +48,7 @@ const CreateCourse = (props: Props) => {
       title: "",
       videoUrl: "",
       description: "",
+      videoLength: "",
       videoSection: "Untitled Section",
       links: [{ title: "", url: "" }],
       suggestion: "",
@@ -66,6 +68,7 @@ const CreateCourse = (props: Props) => {
       (courseContent) => ({
         title: courseContent.title,
         videoUrl: courseContent.videoUrl,
+        videoLength: courseContent.videoLength,
         description: courseContent.description,
         videoSection: courseContent.videoSection,
         links: courseContent.links.map((link) => ({
@@ -93,6 +96,8 @@ const CreateCourse = (props: Props) => {
 
     setCourseData(data);
   };
+
+  console.log(courseData);
 
   const handleCourseCreate = async () => {
     const data = courseData;
