@@ -19,6 +19,7 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { useSelector } from "react-redux";
 import avatarDefault from "../../../../public/assets/user.png";
 import {
+  MdEventNote,
   MdManageHistory,
   MdOndemandVideo,
   MdPeopleOutline,
@@ -220,6 +221,13 @@ const Sidebar = () => {
               title="FAQ"
               to={"/admin/faq"}
               icon={<MdQuiz size={isCollapsed ? 20 : 14} />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Categories"
+              to={"/admin/categories"}
+              icon={<MdEventNote size={isCollapsed ? 20 : 14} />}
               selected={selected}
               setSelected={setSelected}
             />

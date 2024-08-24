@@ -4,7 +4,7 @@ import DashboardHero from "@/app/components/Admin/DashboardHero";
 import AdminProtected from "@/app/hooks/adminProtected";
 import Heading from "@/app/utils/Heading";
 import AdminSidebar from "@/app/components/Admin/sidebar/AdminSidebar";
-import EditHero from "@/app/components/Admin/Customization/EditHero";
+import EditFaq from "@/app/components/Admin/Customization/EditFaq";
 
 type Props = {};
 
@@ -13,17 +13,17 @@ const page = (props: Props) => {
     <div>
       <AdminProtected>
         <Heading
-          title="Hero - Admin"
+          title="FAQ - Admin"
           description="BeReady is a learning platform for students"
           keywords="Promming, MERN, Redux"
         />
-        <div className="flex h-screen">
+        <div className="flex min-h-screen">
           <div className="1500px:w-[16%] w-1/5">
             <AdminSidebar />
           </div>
           <div className="w-[85%]">
             <DashboardHero />
-            <EditHero />
+            <EditFaq />
           </div>
         </div>
       </AdminProtected>
