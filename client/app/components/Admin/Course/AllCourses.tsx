@@ -69,8 +69,6 @@ const AllCourses = (props: Props) => {
     },
   ];
 
-  console.log(data);
-
   const rows: any = [];
 
   {

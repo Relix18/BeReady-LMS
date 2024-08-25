@@ -62,7 +62,7 @@ export const createOrder = TryCatch(
 //get all order -- for admin
 export const getAllOrder = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
-    const users = await Order.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, users });
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, orders });
   }
 );
