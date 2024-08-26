@@ -52,7 +52,7 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
         setLogout(true);
       }
     }
-  }, [data, user]);
+  }, [data, user, isSuccess, error, setLogout, socialAuth]);
 
   useEffect(() => {
     if (!open && route === "Verification") {

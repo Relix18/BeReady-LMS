@@ -105,3 +105,10 @@ body {
     transform: translateX(0);
   }
 }
+
+.text-gradient {
+  background: -webkit-linear-gradient(45deg, #8069ff 5%, #2500c9 95%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
