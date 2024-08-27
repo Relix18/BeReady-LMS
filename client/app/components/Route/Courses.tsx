@@ -19,7 +19,7 @@ const Courses = (props: Props) => {
         <br />
         Opportunity With Our Courses
       </h1>
-      <div className="grid grid-cols-1 gap-[20px] 800px:grid-cols-2 md:gap-[25px] 1100px:grid-cols-3 lg:gap-[25px] 1500px:grid-cols-4 1500px:gap-[35] border-0 mb-12">
+      <div className="grid grid-cols-1 gap-[20px] 800px:grid-cols-2 800px:gap-[25px] 1100px:grid-cols-3 1100px:gap-[25px] 1500px:grid-cols-4 1500px:gap-[35] border-0 mb-12">
         {courses?.map((course: any, index: number) => (
           <>
             <CourseCard key={index} course={course} />
