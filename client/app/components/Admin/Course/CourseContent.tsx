@@ -52,6 +52,7 @@ const CourseContent: FC<Props> = ({
       item.title === "" ||
       item.videoUrl === "" ||
       item.description === "" ||
+      item.videoLength === "" ||
       item.links[0].title === "" ||
       item.links[0].url === ""
     ) {
@@ -71,6 +72,7 @@ const CourseContent: FC<Props> = ({
         title: "",
         videoUrl: "",
         description: "",
+        videoLength: "",
         videoSection: newVideoSection,
         links: [{ title: "", url: "" }],
       };
@@ -94,8 +96,8 @@ const CourseContent: FC<Props> = ({
       const newContent = {
         title: "",
         videoUrl: "",
-        videoLength: "",
         description: "",
+        videoLength: "",
         videoSection: `Untitled Section ${activeSection + 1}`,
         links: [{ title: "", url: "" }],
       };
@@ -239,7 +241,8 @@ const CourseContent: FC<Props> = ({
                         value={item.videoLength}
                         onChange={(e) => {
                           const updateData = [...courseContentData];
-                          updateData[index].videoLength = e.target.value;
+                          updateData[index].videoLength =
+                            e.target.value.toString();
                           setCourseContentData(updateData);
                         }}
                       />

@@ -84,6 +84,7 @@ const CreateCourse = (props: Props) => {
       description: courseInfo.description,
       price: courseInfo.price,
       estimatedPrice: courseInfo.estimatedPrice,
+      category: courseInfo.category,
       thumbnail: courseInfo.thumbnail,
       tags: courseInfo.tags,
       level: courseInfo.level,
@@ -97,12 +98,12 @@ const CreateCourse = (props: Props) => {
     setCourseData(data);
   };
 
-  console.log(courseData);
-
   const handleCourseCreate = async () => {
     const data = courseData;
     await CreateCourse(data);
   };
+
+  console.log(courseData);
 
   return (
     <>
