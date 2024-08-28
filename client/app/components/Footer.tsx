@@ -11,7 +11,7 @@ const Footer = (props: Props) => {
       <div className="w-[95%] 800px:w-full 800px:max-w-[85%] mx-auto px-2 400px:px-6 1100px:px-8">
         <div className="grid grid-cols-1 gap-8 400px:grid-cols-2 800px:grid-cols-4">
           <div className="space-y-3">
-            <h3 className="text-[20px] font-600 text-black dark:text-white">
+            <h3 className="text-[20px] font-[600] text-black dark:text-white">
               About
             </h3>
             <ul className="space-y-4">
@@ -42,7 +42,7 @@ const Footer = (props: Props) => {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className="text-[20px] font-600 text-black dark:text-white">
+            <h3 className="text-[20px] font-[600] text-black dark:text-white">
               Quick Links
             </h3>
             <ul className="space-y-4">
@@ -73,7 +73,7 @@ const Footer = (props: Props) => {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className="text-[20px] font-600 text-black dark:text-white">
+            <h3 className="text-[20px] font-[600] text-black dark:text-white">
               Social Links
             </h3>
             <ul className="space-y-4">
@@ -104,7 +104,7 @@ const Footer = (props: Props) => {
             </ul>
           </div>
           <div>
-            <h3 className="text-[20px] font-600 text-black dark:text-white pb-3">
+            <h3 className="text-[20px] font-[600] text-black dark:text-white pb-3">
               Contact Info
             </h3>
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">

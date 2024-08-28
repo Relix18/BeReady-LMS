@@ -54,7 +54,7 @@ const DashboardWidgets: FC<Props> = ({ open, value }) => {
                 <h5 className="pt-2 font-Poppins dark:text-[#fff] text-black text-[20px]">
                   120
                 </h5>
-                <h5 className="py-2 font-Poppins dark:text-[#45cba0] text-black text-[20px] font-400">
+                <h5 className="py-2 font-Poppins dark:text-[#45cba0] text-black text-[20px] font-[400]">
                   Sales Obtained
                 </h5>
               </div>
@@ -72,7 +72,7 @@ const DashboardWidgets: FC<Props> = ({ open, value }) => {
                 <h5 className="pt-2 font-Poppins dark:text-[#fff] text-black text-[20px]">
                   450
                 </h5>
-                <h5 className="py-2 font-Poppins dark:text-[#45cba0] text-black text-[20px] font-400">
+                <h5 className="py-2 font-Poppins dark:text-[#45cba0] text-black text-[20px] font-[400]">
                   New Users
                 </h5>
               </div>
