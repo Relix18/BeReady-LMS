@@ -5,11 +5,28 @@ import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import { Notification } from "../models/notification.model.js";
 import { Course } from "../models/course.model.js";
+import stripe from "stripe";
+import { redis } from "../data/redis.js";
+
+const Stripe = new stripe(process.env.STRIPE_SECRET_KEY as string);
 
 //create order
 export const createOrder = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { courseId, payment_info } = req.body;
+
+    if (payment_info) {
+      if ("id" in payment_info) {
+        const paymentIntentId = payment_info.id;
+        const paymentIntent = await Stripe.paymentIntents.retrieve(
+          paymentIntentId
+        );
+
+        if (paymentIntent.status !== "succeeded") {
+          return next(new ErrorHanlder(404, "Payment failed"));
+        }
+      }
+    }
 
     const user = await User.findById(req.user?._id);
 
@@ -42,6 +59,8 @@ export const createOrder = TryCatch(
       courseId: course._id as string,
     });
 
+    await redis.set(data.userId, JSON.stringify(user));
+
     await user?.save();
 
     //send mail
@@ -64,5 +83,34 @@ export const getAllOrder = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const orders = await Order.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, orders });
+  }
+);
+
+//stripe key
+export const sendStripeKey = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res
+      .status(200)
+      .json({ success: true, stripeKey: process.env.STRIPE_PUBLISHABLE_KEY });
+  }
+);
+
+// stripe payment
+export const processPayment = TryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const paymentIntent = await Stripe.paymentIntents.create({
+      amount: req.body.amount,
+      currency: "USD",
+      metadata: {
+        company: "BeReady",
+      },
+
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+    res
+      .status(201)
+      .json({ success: true, client_secret: paymentIntent.client_secret });
   }
 );

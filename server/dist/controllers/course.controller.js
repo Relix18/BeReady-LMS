@@ -35,7 +35,7 @@ export const editCourse = TryCatch(async (req, res, next) => {
     const courseData = await Course.findById(req.params.id);
     const thumbnail = data.thumbnail;
     if (thumbnail) {
-        if (courseData) {
+        if (courseData && !thumbnail.startsWith("https")) {
             await cloudinary.uploader.destroy(courseData.thumbnail.public_id);
         }
         const myCloud = await cloudinary.uploader.upload(thumbnail, {
@@ -49,6 +49,7 @@ export const editCourse = TryCatch(async (req, res, next) => {
     const course = await Course.findByIdAndUpdate(req.params.id, { $set: data }, {
         new: true,
     });
+    await redis.del(req.params.id);
     res.status(201).json({
         success: true,
         course,
