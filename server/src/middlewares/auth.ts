@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { redis } from "../data/redis.js";
 import { TryCatch } from "../middlewares/error.js";
 import { updateAccessToken } from "../controllers/user.controller.js";
+import { User } from "../models/user.model.js";
 
 export const isAuthenticated = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +12,7 @@ export const isAuthenticated = TryCatch(
 
     if (!access_token) {
       return next(
-        new ErrorHanlder(400, "Please login to access this resource")
+        new ErrorHanlder(400, "Please login to access this resource1")
       );
     }
 
@@ -19,22 +20,26 @@ export const isAuthenticated = TryCatch(
 
     if (!decoded) {
       return next(
-        new ErrorHanlder(400, "Please login to access this resource")
+        new ErrorHanlder(400, "Please login to access this resource2")
       );
     }
 
     if (decoded.exp && decoded.exp <= Date.now() / 1000) {
       await updateAccessToken(req, res, next);
     } else {
-      const user = await redis.get(decoded.id);
+      const redisUser = await redis.get(decoded.id);
+      const dbUser = await User.findById(decoded.id);
 
-      if (!user) {
+      if (redisUser) {
+        req.user = JSON.parse(redisUser);
+      } else if (dbUser) {
+        req.user = dbUser;
+        await redis.set(decoded.id, JSON.stringify(dbUser));
+      } else {
         return next(
-          new ErrorHanlder(400, "Please login to access this resource")
+          new ErrorHanlder(400, "Please login to access this resource3")
         );
       }
-
-      req.user = JSON.parse(user);
 
       next();
     }
