@@ -51,14 +51,14 @@ const CourseContentList: FC<Props> = ({
           (video: any) => video.videoSection === section
         );
 
-        const sectionVideoCout: number = sectionVideos.length;
+        const sectionVideoCount: number = sectionVideos.length;
         const sectionVideoLength: number = sectionVideos.reduce(
           (totalLength: number, item: any) => totalLength + item.videoLength,
           0
         );
 
         const sectionStartIndex: number = totalCount;
-        totalCount += sectionVideoLength;
+        totalCount += sectionVideoCount;
 
         const sectionContentHours: number = sectionVideoLength / 60;
 
@@ -85,7 +85,7 @@ const CourseContentList: FC<Props> = ({
               </div>
             </div>
             <h5 className="text-black dark:text-white">
-              {sectionVideoCout} Lessons •{" "}
+              {sectionVideoCount} Lessons •{" "}
               {sectionVideoLength < 60
                 ? sectionVideoLength
                 : sectionContentHours.toFixed(2)}{" "}
