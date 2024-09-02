@@ -120,11 +120,11 @@ const Login: React.FC<Props> = ({ setRoute, setOpen }) => {
           />
           <AiFillGithub
             size={30}
-            className="mr-2 cursor-pointer"
+            className="mr-2 cursor-pointer text-black dark:text-white"
             onClick={() => signIn("github")}
           />
         </div>
-        <h5 className="text-center font-Poppins pt-4 text-[14px]">
+        <h5 className="text-center text-black dark:text-white font-Poppins pt-4 text-[14px]">
           Not have an account?{" "}
           <span
             className="text-[#2190ff] pl-1 cursor-pointer"

@@ -133,9 +133,12 @@ const Signup: React.FC<Props> = ({ setRoute }) => {
         </h5>
         <div className="flex items-center justify-center my-3">
           <FcGoogle size={30} className="mr-2 cursor-pointer" />
-          <AiFillGithub size={30} className="mr-2 cursor-pointer" />
+          <AiFillGithub
+            size={30}
+            className="mr-2 cursor-pointer text-black dark:text-white"
+          />
         </div>
-        <h5 className="text-center font-Poppins pt-4 text-[14px]">
+        <h5 className="text-center text-black dark:text-white font-Poppins pt-4 text-[14px]">
           Already have an account?{" "}
           <span
             className="text-[#2190ff] pl-1 cursor-pointer"

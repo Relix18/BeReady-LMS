@@ -43,7 +43,7 @@ const CourseContent = ({ courseId, user }: Props) => {
                 id={courseId}
                 activeVideo={activeVideo}
                 setActiveVideo={setActiveVideo}
-                user={user}
+                user={user.user}
               />
             </div>
             <div className="hidden 800px:block 800px:col-span-3">

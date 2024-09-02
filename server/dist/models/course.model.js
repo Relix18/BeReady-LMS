@@ -7,15 +7,25 @@ const reviewSchema = new Schema({
     },
     comment: String,
     commentReplies: [Object],
+}, {
+    timestamps: true,
 });
 const linkSchema = new Schema({
     title: String,
     url: String,
 });
+const answerSchema = new Schema({
+    user: Object,
+    answer: String,
+}, {
+    timestamps: true,
+});
 const commentSchema = new Schema({
     user: Object,
     question: String,
-    questionReplies: [Object],
+    questionReplies: [answerSchema],
+}, {
+    timestamps: true,
 });
 const courseDataSchema = new Schema({
     title: String,

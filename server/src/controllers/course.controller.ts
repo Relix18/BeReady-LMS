@@ -246,13 +246,14 @@ export const addAnswer = TryCatch(
         title: `New Question Reply`,
         message: `${req.user?.name} has replied on your question ${course?.name}`,
       });
-    } else {
-      await sendEmail({
-        email: question.user.email,
-        subject: "Question Reply",
-        message: `Your question has been replied to.`,
-      });
     }
+    // else {
+    //   await sendEmail({
+    //     email: question.user.email,
+    //     subject: "Question Reply",
+    //     message: `Your question has been replied to.`,
+    //   });
+    // }
 
     res.status(200).json({
       success: true,

@@ -4,7 +4,6 @@ import ErrorHandler from "../utils/errorHandler.js";
 import { v2 as cloudinary } from "cloudinary";
 import { redis } from "../data/redis.js";
 import mongoose from "mongoose";
-import sendEmail from "../utils/sendMail.js";
 import { Notification } from "../models/notification.model.js";
 import axios from "axios";
 //upload course
@@ -167,13 +166,13 @@ export const addAnswer = TryCatch(async (req, res, next) => {
             message: `${req.user?.name} has replied on your question ${course?.name}`,
         });
     }
-    else {
-        await sendEmail({
-            email: question.user.email,
-            subject: "Question Reply",
-            message: `Your question has been replied to.`,
-        });
-    }
+    // else {
+    //   await sendEmail({
+    //     email: question.user.email,
+    //     subject: "Question Reply",
+    //     message: `Your question has been replied to.`,
+    //   });
+    // }
     res.status(200).json({
         success: true,
         course,

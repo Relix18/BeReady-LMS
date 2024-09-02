@@ -4,7 +4,12 @@ import { IUser } from "./user.model";
 interface IComment extends Document {
   user: IUser;
   question: string;
-  questionReplies: IComment[];
+  questionReplies: IAnswer[];
+}
+
+interface IAnswer extends Document {
+  user: IUser;
+  answer: string;
 }
 
 interface IReview extends Document {
@@ -53,26 +58,46 @@ interface ICourse extends Document {
   purchased: number;
 }
 
-const reviewSchema = new Schema<IReview>({
-  user: Object,
-  rating: {
-    type: Number,
-    default: 0,
+const reviewSchema = new Schema<IReview>(
+  {
+    user: Object,
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    comment: String,
+    commentReplies: [Object],
   },
-  comment: String,
-  commentReplies: [Object],
-});
+  {
+    timestamps: true,
+  }
+);
 
 const linkSchema = new Schema<ILink>({
   title: String,
   url: String,
 });
 
-const commentSchema = new Schema<IComment>({
-  user: Object,
-  question: String,
-  questionReplies: [Object],
-});
+const answerSchema = new Schema<IAnswer>(
+  {
+    user: Object,
+    answer: String,
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const commentSchema = new Schema<IComment>(
+  {
+    user: Object,
+    question: String,
+    questionReplies: [answerSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const courseDataSchema = new Schema<ICourseData>({
   title: String,
