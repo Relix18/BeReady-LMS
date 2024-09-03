@@ -212,7 +212,7 @@ export const addReview = TryCatch(async (req, res, next) => {
     });
 });
 export const addReply = TryCatch(async (req, res, next) => {
-    const { reviewId, courseId, comment } = req.body;
+    const { reviewId, courseId, reply } = req.body;
     const course = await Course.findById(courseId);
     if (!course) {
         return next(new ErrorHandler(404, "Course not found"));
@@ -223,7 +223,7 @@ export const addReply = TryCatch(async (req, res, next) => {
     }
     const newReply = {
         user: req.user,
-        comment,
+        reply,
     };
     if (!review.commentReplies) {
         review.commentReplies = [];

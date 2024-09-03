@@ -1,4 +1,10 @@
 import mongoose, { Schema } from "mongoose";
+const replySchema = new Schema({
+    user: Object,
+    reply: String,
+}, {
+    timestamps: true,
+});
 const reviewSchema = new Schema({
     user: Object,
     rating: {
@@ -6,7 +12,7 @@ const reviewSchema = new Schema({
         default: 0,
     },
     comment: String,
-    commentReplies: [Object],
+    commentReplies: [replySchema],
 }, {
     timestamps: true,
 });

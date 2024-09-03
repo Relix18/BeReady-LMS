@@ -323,11 +323,11 @@ export const addReview = TryCatch(
 interface IAddReply {
   reviewId: string;
   courseId: string;
-  comment: string;
+  reply: string;
 }
 export const addReply = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { reviewId, courseId, comment } = req.body as IAddReply;
+    const { reviewId, courseId, reply } = req.body as IAddReply;
     const course = await Course.findById(courseId);
     if (!course) {
       return next(new ErrorHandler(404, "Course not found"));
@@ -342,7 +342,7 @@ export const addReply = TryCatch(
     }
     const newReply: any = {
       user: req.user,
-      comment,
+      reply,
     };
 
     if (!review.commentReplies) {

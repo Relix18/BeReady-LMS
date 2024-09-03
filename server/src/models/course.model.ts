@@ -12,6 +12,11 @@ interface IAnswer extends Document {
   answer: string;
 }
 
+interface IReply extends Document {
+  user: IUser;
+  reply: string;
+}
+
 interface IReview extends Document {
   user: IUser;
   rating: number;
@@ -58,6 +63,16 @@ interface ICourse extends Document {
   purchased: number;
 }
 
+const replySchema = new Schema<IReply>(
+  {
+    user: Object,
+    reply: String,
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const reviewSchema = new Schema<IReview>(
   {
     user: Object,
@@ -66,7 +81,7 @@ const reviewSchema = new Schema<IReview>(
       default: 0,
     },
     comment: String,
-    commentReplies: [Object],
+    commentReplies: [replySchema],
   },
   {
     timestamps: true,

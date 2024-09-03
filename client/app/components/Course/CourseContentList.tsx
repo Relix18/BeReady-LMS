@@ -100,7 +100,9 @@ const CourseContentList: FC<Props> = ({
                   return (
                     <div
                       className={`w-full ${
-                        videoIndex === activeVideo ? "bg-slate-800" : ""
+                        videoIndex === activeVideo
+                          ? " bg-slate-200 dark:bg-slate-800"
+                          : ""
                       } cursor-pointer transition-all p-2`}
                       key={video._id}
                       onClick={() =>

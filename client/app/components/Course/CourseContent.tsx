@@ -13,7 +13,7 @@ type Props = {
 
 const CourseContent = ({ courseId, user }: Props) => {
   const { data: courseData, isLoading } = useGetCourseContentQuery(courseId);
-  const data = courseData?.courses.courseData;
+  const data = courseData?.courses;
   const [activeVideo, setActiveVideo] = useState(0);
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("Login");
@@ -49,7 +49,7 @@ const CourseContent = ({ courseId, user }: Props) => {
             <div className="hidden 800px:block 800px:col-span-3">
               <CourseContentList
                 setActiveVideo={setActiveVideo}
-                data={data}
+                data={data.courseData}
                 activeVideo={activeVideo}
               />
             </div>

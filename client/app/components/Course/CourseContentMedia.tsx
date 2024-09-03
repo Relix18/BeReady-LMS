@@ -13,10 +13,12 @@ import toast from "react-hot-toast";
 import {
   useAddAnswerMutation,
   useAddQuestionMutation,
+  useAddReviewCourseMutation,
 } from "@/redux/features/course/courseAPI";
 import { format } from "timeago.js";
 import { BiMessage } from "react-icons/bi";
 import { MdVerified } from "react-icons/md";
+import Ratings from "@/app/utils/Ratings";
 
 type Props = {
   id: string;
@@ -39,6 +41,7 @@ const CourseContentMedia = ({
   const [answer, setAnswer] = useState("");
   const [questionId, setQuestionId] = useState("");
   const [review, setReview] = useState("");
+  const [isReviewReply, setIsReviewReply] = useState(false);
   const [addQuestion, { isSuccess, error, isLoading: isQuestionLoading }] =
     useAddQuestionMutation();
   const [
@@ -49,6 +52,14 @@ const CourseContentMedia = ({
       isLoading: isAnswerLoading,
     },
   ] = useAddAnswerMutation();
+  const [
+    addReview,
+    {
+      isSuccess: isReviewSuccess,
+      error: reviewError,
+      isLoading: isReviewLoading,
+    },
+  ] = useAddReviewCourseMutation();
 
   const isReviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user?._id
@@ -61,7 +72,7 @@ const CourseContentMedia = ({
       addQuestion({
         courseId: id,
         question,
-        contentId: data[activeVideo]?._id,
+        contentId: data.courseData[activeVideo]?._id,
       });
     }
   };
@@ -70,9 +81,21 @@ const CourseContentMedia = ({
     addAnswer({
       answer,
       courseId: id,
-      contentId: data[activeVideo]?._id,
+      contentId: data.courseData[activeVideo]?._id,
       questionId,
     });
+  };
+
+  const handleReviewSubmit = () => {
+    if (review.length === 0) {
+      toast.error("Please enter your review");
+    } else {
+      addReview({
+        id,
+        review,
+        rating,
+      });
+    }
   };
 
   useEffect(() => {
@@ -98,11 +121,23 @@ const CourseContentMedia = ({
     }
   }, [isAnswerSuccess, answerError]);
 
+  useEffect(() => {
+    if (isReviewSuccess) {
+      setReview("");
+      setRating(0);
+      toast.success("Review added successfully");
+    }
+    if (reviewError) {
+      const err = reviewError as any;
+      toast.error(err.data.message);
+    }
+  }, [isReviewSuccess, reviewError]);
+
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
-        videoUrl={data[activeVideo]?.videoUrl}
-        title={data[activeVideo]?.title}
+        videoUrl={data.courseData[activeVideo]?.videoUrl}
+        title={data.courseData[activeVideo]?.title}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div
@@ -118,11 +153,12 @@ const CourseContentMedia = ({
         </div>
         <div
           className={`${styles.button} !w-[unset] !min-h-[40px] !py-[unset] ${
-            data.length - 1 === activeVideo && "!cursor-no-drop opacity-[.8]"
+            data.courseData.length - 1 === activeVideo &&
+            "!cursor-no-drop opacity-[.8]"
           }`}
           onClick={() =>
             setActiveVideo(
-              data?.length - 1 === activeVideo ? 0 : activeVideo + 1
+              data?.courseData.length - 1 === activeVideo ? 0 : activeVideo + 1
             )
           }
         >
@@ -131,7 +167,7 @@ const CourseContentMedia = ({
         </div>
       </div>
       <h1 className="pt-2 text-[25px] font-[600]">
-        {data[activeVideo]?.title}
+        {data.courseData[activeVideo]?.title}
       </h1>
       <br />
       <div className="w-full p-4 flex items-center justify-between bg-slate-500 bg-opacity-20 backdrop-blur shadow-[bg-slate-700] rounded shadow-inner">
@@ -150,24 +186,26 @@ const CourseContentMedia = ({
       <br />
       {activeBar === 0 && (
         <p className="text-black dark:text-white font-Poppins">
-          {data[activeVideo]?.description}
+          {data.courseData[activeVideo]?.description}
         </p>
       )}
       {activeBar === 1 && (
         <div>
-          {data[activeVideo]?.links.map((item: any, index: number) => (
-            <div className="m-5" key={index}>
-              <h2 className="800px:text-[20px] 800px:inline-block text-black dark:text-white">
-                {item.title && item.title + " :"}
-              </h2>
-              <a
-                className="inline-block text-[#4395c4] 800px:text-[20px] 800px:pl-2"
-                href={item.url}
-              >
-                {item.url}
-              </a>
-            </div>
-          ))}
+          {data.courseData[activeVideo]?.links.map(
+            (item: any, index: number) => (
+              <div className="m-5" key={index}>
+                <h2 className="800px:text-[20px] 800px:inline-block text-black dark:text-white">
+                  {item.title && item.title + " :"}
+                </h2>
+                <a
+                  className="inline-block text-[#4395c4] 800px:text-[20px] 800px:pl-2"
+                  href={item.url}
+                >
+                  {item.url}
+                </a>
+              </div>
+            )
+          )}
         </div>
       )}
       {activeBar === 2 && (
@@ -208,76 +246,118 @@ const CourseContentMedia = ({
           <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
           <div>
             <CommentReply
-              data={data}
+              data={data.courseData}
               activeVideo={activeVideo}
               answer={answer}
               setAnswer={setAnswer}
               handleAnswerSubmit={handleAnswerSubmit}
               user={user}
               setQuestionId={setQuestionId}
+              isAnswerLoading={isAnswerLoading}
             />
           </div>
         </>
       )}
       {activeBar === 3 && (
-        <div className="w-full">
-          {!isReviewExists && (
-            <>
-              <div className="flex w-full">
-                <Image
-                  src={user.avatar ? user.avatar.url : profile}
-                  alt="avatar"
-                  width={50}
-                  height={50}
-                  className="w-[50px] h-[50px] rounded-full object-cover"
-                />
-                <div className="w-full">
-                  <h5 className="pl-3 text-[20px] font-[500] dark:text-white text-black">
-                    Give a Rating <span className="text-red-500">*</span>
-                  </h5>
-                  <div className="flex w-full ml-2 pb-3">
-                    {[1, 2, 3, 4, 5].map((i: number) =>
-                      rating >= i ? (
-                        <AiFillStar
-                          key={i}
-                          size={25}
-                          className="mr-1 cursor-pointer"
-                          color="rgb(246,186,0)"
-                          onClick={() => setRating(i)}
-                        />
-                      ) : (
-                        <AiOutlineStar
-                          key={i}
-                          size={25}
-                          className="mr-1 cursor-pointer"
-                          color="rgb(246,186,0)"
-                          onClick={() => setRating(i)}
-                        />
-                      )
-                    )}
+        <>
+          <div className="w-full">
+            {!isReviewExists && (
+              <>
+                <div className="flex w-full">
+                  <Image
+                    src={user.avatar ? user.avatar.url : profile}
+                    alt="avatar"
+                    width={50}
+                    height={50}
+                    className="w-[50px] h-[50px] rounded-full object-cover"
+                  />
+
+                  <div className="w-full">
+                    <h5 className="pl-3 text-[20px] font-[500] dark:text-white text-black">
+                      Give a Rating <span className="text-red-500">*</span>
+                    </h5>
+                    <div className="flex w-full ml-2 pb-3">
+                      {[1, 2, 3, 4, 5].map((i: number) =>
+                        rating >= i ? (
+                          <AiFillStar
+                            key={i}
+                            size={25}
+                            className="mr-1 cursor-pointer"
+                            color="rgb(246,186,0)"
+                            onClick={() => setRating(i)}
+                          />
+                        ) : (
+                          <AiOutlineStar
+                            key={i}
+                            size={25}
+                            className="mr-1 cursor-pointer"
+                            color="rgb(246,186,0)"
+                            onClick={() => setRating(i)}
+                          />
+                        )
+                      )}
+                    </div>
+                    <textarea
+                      name=""
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+                      id=""
+                      cols={40}
+                      rows={5}
+                      placeholder="Write a review"
+                      className="outline-none border-[#00000028] dark:border-[#ffffff57] text-black dark:text-white resize-none bg-transparent ml-3 border  800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
+                    ></textarea>
                   </div>
-                  <textarea
-                    name=""
-                    value={review}
-                    onChange={(e) => setReview(e.target.value)}
-                    id=""
-                    cols={40}
-                    rows={5}
-                    placeholder="Write a review"
-                    className="outline-none resize-none bg-transparent ml-3 border border-[#ffffff57] 800px:w-full p-2 rounded w-[90%] 800px:text-[18px] font-Poppins"
-                  ></textarea>
                 </div>
-              </div>
-              <div className="w-full flex justify-end">
+                <div className="w-full flex justify-end">
+                  <div
+                    className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-2 800px:mr-0 mr-2`}
+                    onClick={isReviewLoading ? () => {} : handleReviewSubmit}
+                  >
+                    Submit
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <br />
+          <div className="w-full h-[1px] bg-[#ffffff3b]"></div>
+          <div className="w-full">
+            {(data?.reviews && [...data.reviews].reverse()).map(
+              (item: any, index: number) => (
                 <div
-                  className={`${styles.button} !w-[120px] !h-[40px] text-[18px] mt-2 800px:mr-0 mr-2`}
+                  className="w-full my-5 text-white dark:text-white"
+                  key={index}
                 >
-                  Submit
+                  <div className="w-full flex">
+                    <div>
+                      <Image
+                        src={item.user.avatar ? item.user.avatar.url : profile}
+                        alt="avatar"
+                        width={50}
+                        height={50}
+                        className="w-[50px] h-[50px] rounded-full object-cover"
+                      />
+                    </div>
+                    <div className="pl-3 text-black dark:text-white">
+                      <h5 className="text-[20px]">{item?.user.name}</h5>
+                      <Ratings rating={item?.rating} />
+                      <p>{item?.comment}</p>
+                      <small className="text-[#000000a2] dark:text-[#ffffff83]">
+                        {format(item?.createdAt)} •
+                      </small>
+                    </div>
+                  </div>
+                  {user.role === "admin" && (
+                    <span className={styles.label}>Add Reply</span>
+                  )}
                 </div>
-              </div>
-            </>
-          )}
-        </div>
+              )
+            )}
+          </div>
+          <br />
+          {isReviewReply && <input type="text" className={styles.input} />}
+        </>
       )}
     </div>
   );
@@ -291,6 +371,7 @@ const CommentReply = ({
   handleAnswerSubmit,
   user,
   setQuestionId,
+  isAnswerLoading,
 }: any) => {
   return (
     <>
@@ -304,6 +385,7 @@ const CommentReply = ({
             setQuestionId={setQuestionId}
             answer={answer}
             handleAnswerSubmit={handleAnswerSubmit}
+            isAnswerLoading={isAnswerLoading}
           />
         ))}
       </div>
@@ -318,6 +400,7 @@ const CommentItem = ({
   setQuestionId,
   answer,
   handleAnswerSubmit,
+  isAnswerLoading,
 }: any) => {
   const [replyActive, setReplyActive] = useState(false);
   return (
@@ -408,7 +491,7 @@ const CommentItem = ({
                   type="submit"
                   className={"absolute right-0 bottom-1 font-[500]"}
                   onClick={handleAnswerSubmit}
-                  disabled={answer == ""}
+                  disabled={answer == "" || isAnswerLoading}
                 >
                   Submit
                 </button>
