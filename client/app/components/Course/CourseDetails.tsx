@@ -4,12 +4,14 @@ import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
 import React, { FC, useState } from "react";
 import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 import CourseContentList from "./CourseContentList";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Payment/CheckoutForm";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import Image from "next/image";
+import profile from "@/public/assets/user.png";
+import { MdVerified } from "react-icons/md";
 
 type Props = {
   course: any;
@@ -123,18 +125,23 @@ const CourseDetails: FC<Props> = ({ course, clientSecret, stripePromise }) => {
                 </h5>
               </div>
               <br />
+              {console.log(course)}
               {course.reviews &&
                 [...course.reviews]
                   .reverse()
                   .map((item: any, index: number) => (
                     <div key={index} className="w-full pb-4">
                       <div className="flex">
-                        <div className="w-[50px] h-[50px]">
-                          <div className="w-[50px] h-[50px] bg-slate-600 rounded-[50px] flex items-center justify-center cursor-pointer">
-                            <h1 className="uppercase text-[18px] text-black dark:text-white">
-                              {item.user.name.slice(0, 2)}
-                            </h1>
-                          </div>
+                        <div>
+                          <Image
+                            src={
+                              item.user.avatar ? item.user.avatar.url : profile
+                            }
+                            alt="avatar"
+                            width={50}
+                            height={50}
+                            className="w-[50px] h-[50px] rounded-full object-cover"
+                          />
                         </div>
                         <div className="hidden 800px:block pl-2">
                           <div className="flex items-center">
@@ -156,6 +163,43 @@ const CourseDetails: FC<Props> = ({ course, clientSecret, stripePromise }) => {
                           </h5>
                         </div>
                       </div>
+                      {item.commentReplies.map((reply: any, index: number) => (
+                        <div
+                          className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                          key={index}
+                        >
+                          <div>
+                            <Image
+                              src={
+                                reply.user.avatar
+                                  ? reply.user.avatar.url
+                                  : profile
+                              }
+                              alt="avatar"
+                              width={50}
+                              height={50}
+                              className="w-[50px] h-[50px] rounded-full object-cover"
+                            />
+                          </div>
+                          <div className="pl-2">
+                            <div className="flex items-center">
+                              <h5 className="text-[20px]">
+                                {reply?.user.name}
+                              </h5>
+                              {reply.user.role === "admin" && (
+                                <MdVerified
+                                  size={20}
+                                  className="text-[#0d6efd] ml-2"
+                                />
+                              )}
+                            </div>
+                            <p>{reply.reply}</p>
+                            <small className="text-[#000000a2] dark:text-[#ffffff83]">
+                              {format(reply?.createdAt)} •
+                            </small>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ))}
             </div>

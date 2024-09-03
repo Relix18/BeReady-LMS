@@ -201,6 +201,7 @@ export const addReview = TryCatch(async (req, res, next) => {
         course.ratings = avg / course?.reviews.length;
     }
     await course?.save();
+    await redis.del(req.params.id);
     await Notification.create({
         user: req.user,
         title: `New Review`,
@@ -230,6 +231,7 @@ export const addReply = TryCatch(async (req, res, next) => {
     }
     review.commentReplies.push(newReply);
     await course.save();
+    await redis.del(req.params.id);
     res.status(200).json({
         success: true,
         course,

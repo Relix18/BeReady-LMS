@@ -306,6 +306,8 @@ export const addReview = TryCatch(
 
     await course?.save();
 
+    await redis.del(req.params.id);
+
     await Notification.create({
       user: req.user,
       title: `New Review`,
@@ -352,6 +354,8 @@ export const addReply = TryCatch(
     review.commentReplies.push(newReply);
 
     await course.save();
+
+    await redis.del(req.params.id);
 
     res.status(200).json({
       success: true,

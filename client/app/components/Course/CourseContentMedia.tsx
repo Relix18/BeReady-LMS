@@ -14,6 +14,7 @@ import {
   useAddAnswerMutation,
   useAddQuestionMutation,
   useAddReviewCourseMutation,
+  useAddReviewReplyMutation,
 } from "@/redux/features/course/courseAPI";
 import { format } from "timeago.js";
 import { BiMessage } from "react-icons/bi";
@@ -42,6 +43,8 @@ const CourseContentMedia = ({
   const [questionId, setQuestionId] = useState("");
   const [review, setReview] = useState("");
   const [isReviewReply, setIsReviewReply] = useState(false);
+  const [reviewReply, setReviewReply] = useState("");
+  const [reviewId, setReviewId] = useState("");
   const [addQuestion, { isSuccess, error, isLoading: isQuestionLoading }] =
     useAddQuestionMutation();
   const [
@@ -60,6 +63,15 @@ const CourseContentMedia = ({
       isLoading: isReviewLoading,
     },
   ] = useAddReviewCourseMutation();
+
+  const [
+    addReviewReply,
+    {
+      isSuccess: isReviewReplySuccess,
+      error: reviewReplyError,
+      isLoading: isReviewReplyLoading,
+    },
+  ] = useAddReviewReplyMutation();
 
   const isReviewExists = data?.reviews?.find(
     (item: any) => item.user._id === user?._id
@@ -98,6 +110,18 @@ const CourseContentMedia = ({
     }
   };
 
+  const handleReviewReplySubmit = () => {
+    if (reviewReply.length === 0) {
+      toast.error("Please enter your review");
+    } else {
+      addReviewReply({
+        courseId: id,
+        reviewId,
+        reply: reviewReply,
+      });
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       setQuestion("");
@@ -132,6 +156,18 @@ const CourseContentMedia = ({
       toast.error(err.data.message);
     }
   }, [isReviewSuccess, reviewError]);
+
+  useEffect(() => {
+    if (isReviewReplySuccess) {
+      setReviewReply("");
+      setReviewId("");
+      toast.success("Reply added successfully");
+    }
+    if (reviewReplyError) {
+      const err = reviewReplyError as any;
+      toast.error(err.data.message);
+    }
+  }, [isReviewReplySuccess, reviewReplyError]);
 
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
@@ -349,14 +385,73 @@ const CourseContentMedia = ({
                     </div>
                   </div>
                   {user.role === "admin" && (
-                    <span className={styles.label}>Add Reply</span>
+                    <span
+                      className={`${styles.label} !ml-10 cursor-pointer`}
+                      onClick={() => {
+                        setIsReviewReply(!isReviewReply);
+                        setReviewId(item._id);
+                      }}
+                    >
+                      Add Reply
+                    </span>
                   )}
+                  {isReviewReply && (
+                    <div className="w-full flex relative text-black dark:text-white">
+                      <input
+                        type="text"
+                        placeholder="Add a reply..."
+                        value={reviewReply}
+                        onChange={(e) => setReviewReply(e.target.value)}
+                        className="block 800px:ml-12 mt-2 outline-none bg-transparent border-b border-[#00000027] dark:border-[#fff] dark:text-white text-black p-[5px] w-[95%]"
+                      />
+                      <button
+                        type="submit"
+                        className={"absolute right-0 bottom-1 font-[500]"}
+                        onClick={handleReviewReplySubmit}
+                        disabled={reviewReply == "" || isReviewReplyLoading}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  )}
+                  {item.commentReplies.map((reply: any, index: number) => (
+                    <div
+                      className="w-full flex 800px:ml-16 my-5 text-black dark:text-white"
+                      key={index}
+                    >
+                      <div>
+                        <Image
+                          src={
+                            reply.user.avatar ? reply.user.avatar.url : profile
+                          }
+                          alt="avatar"
+                          width={50}
+                          height={50}
+                          className="w-[50px] h-[50px] rounded-full object-cover"
+                        />
+                      </div>
+                      <div className="pl-2">
+                        <div className="flex items-center">
+                          <h5 className="text-[20px]">{reply?.user.name}</h5>
+                          {reply.user.role === "admin" && (
+                            <MdVerified
+                              size={20}
+                              className="text-[#0d6efd] ml-2"
+                            />
+                          )}
+                        </div>
+                        <p>{reply.reply}</p>
+                        <small className="text-[#000000a2] dark:text-[#ffffff83]">
+                          {format(reply?.createdAt)} •
+                        </small>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )
             )}
           </div>
           <br />
-          {isReviewReply && <input type="text" className={styles.input} />}
         </>
       )}
     </div>
