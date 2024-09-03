@@ -2,7 +2,7 @@ import { styles } from "@/app/styles/style";
 import CoursePlayer from "@/app/utils/CoursePlayer";
 import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
 import { format } from "timeago.js";
 import CourseContentList from "./CourseContentList";
@@ -17,12 +17,24 @@ type Props = {
   course: any;
   clientSecret: string;
   stripePromise: any;
+  setRoute: any;
+  setOpen: any;
 };
 
-const CourseDetails: FC<Props> = ({ course, clientSecret, stripePromise }) => {
+const CourseDetails: FC<Props> = ({
+  course,
+  clientSecret,
+  stripePromise,
+  setRoute,
+  setOpen: setAuthOpen,
+}) => {
   const { data: userData } = useLoadUserQuery(undefined, {});
-  const user = userData?.user;
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    setUser(userData?.user);
+  }, [userData]);
 
   const discountPercent =
     ((course?.estimatedPrice - course.price) / course.estimatedPrice) * 100;
@@ -33,7 +45,12 @@ const CourseDetails: FC<Props> = ({ course, clientSecret, stripePromise }) => {
     user && user.courses.find((item: any) => item.courseId === course._id);
 
   const buyNowHandler = () => {
-    setOpen(true);
+    if (!user) {
+      setRoute("Login");
+      setAuthOpen(true);
+    } else {
+      setOpen(true);
+    }
   };
 
   return (
@@ -125,7 +142,6 @@ const CourseDetails: FC<Props> = ({ course, clientSecret, stripePromise }) => {
                 </h5>
               </div>
               <br />
-              {console.log(course)}
               {course.reviews &&
                 [...course.reviews]
                   .reverse()
