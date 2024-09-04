@@ -2,6 +2,9 @@ import { app } from "./app.js";
 import { connectDB } from "./data/database.js";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
+import http from "http";
+import { initSocketServer } from "./socketServer.js";
+const socketserver = http.createServer(app);
 
 process.on("uncaughtException", (err) => {
   console.log(`Error: ${err.message}`);
@@ -19,7 +22,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const server = app.listen(process.env.PORT, () => {
+initSocketServer(socketserver);
+
+const server = socketserver.listen(process.env.PORT, () => {
   console.log(`listning on port ${process.env.PORT}`);
 });
 

@@ -21,6 +21,7 @@
     "@types/node": "^20.14.12",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.15",
+    "@types/socket.io": "^3.0.2",
     "axios": "^1.7.4",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.4.0",
@@ -33,6 +34,7 @@
     "mongoose": "^8.5.1",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14",
+    "socket.io": "^4.7.5",
     "stripe": "^16.9.0",
     "typescript": "^5.5.4"
   }

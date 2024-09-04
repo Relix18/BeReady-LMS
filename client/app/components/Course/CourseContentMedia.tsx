@@ -20,6 +20,9 @@ import { format } from "timeago.js";
 import { BiMessage } from "react-icons/bi";
 import { MdVerified } from "react-icons/md";
 import Ratings from "@/app/utils/Ratings";
+import socketIO from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 type Props = {
   id: string;
@@ -45,6 +48,7 @@ const CourseContentMedia = ({
   const [isReviewReply, setIsReviewReply] = useState(false);
   const [reviewReply, setReviewReply] = useState("");
   const [reviewId, setReviewId] = useState("");
+
   const [addQuestion, { isSuccess, error, isLoading: isQuestionLoading }] =
     useAddQuestionMutation();
   const [
@@ -125,6 +129,11 @@ const CourseContentMedia = ({
   useEffect(() => {
     if (isSuccess) {
       setQuestion("");
+      socketId.emit("notification", {
+        title: "New Question",
+        message: `You have a new question in ${data.courseData[activeVideo]?.title}`,
+        userId: user?._id,
+      });
       toast.success("Question added successfully");
     }
     if (error) {
@@ -138,6 +147,13 @@ const CourseContentMedia = ({
       setAnswer("");
       setQuestionId("");
       toast.success("Answer added successfully");
+      if (user.role !== "admin") {
+        socketId.emit("notification", {
+          title: "New Reply Received",
+          message: `You have a new question reply in ${data.courseData[activeVideo]?.title}`,
+          userId: user?._id,
+        });
+      }
     }
     if (answerError) {
       const err = answerError as any;
@@ -149,6 +165,11 @@ const CourseContentMedia = ({
     if (isReviewSuccess) {
       setReview("");
       setRating(0);
+      socketId.emit("notification", {
+        title: " New Review",
+        message: `You have a new review in ${data.name}`,
+        userId: user?._id,
+      });
       toast.success("Review added successfully");
     }
     if (reviewError) {

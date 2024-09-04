@@ -4,7 +4,7 @@ import { login } from "../auth/authSlice";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_URL }),
-  tagTypes: ["User", "Course", "Layout"],
+  tagTypes: ["User", "Course", "Layout", "Notification"],
   endpoints: (builder) => ({
     loadUser: builder.query({
       query: () => ({
