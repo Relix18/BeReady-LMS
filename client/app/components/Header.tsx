@@ -17,6 +17,7 @@ import {
   useSocialAuthMutation,
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 
 type Props = {
   open: boolean;
@@ -30,7 +31,7 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [logout, setLogout] = useState(false);
-  const { user } = useSelector((state: any) => state.auth);
+  const { data: user, isLoading, refetch } = useLoadUserQuery(undefined, {});
   const { data } = useSession();
   const {} = useLogoutQuery(undefined, { skip: !logout ? true : false });
 
@@ -44,11 +45,12 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
           name: data.user?.name,
           avatar: data.user?.image,
         });
+        refetch();
       }
       if (data === null && isSuccess) {
         toast.success("Login Successful");
       }
-      if (data === null) {
+      if (data === null && !isLoading && !user) {
         setLogout(true);
       }
     }
@@ -81,7 +83,7 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
       <div
         className={`${
           active
-            ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:broder-[#ffffff1c] shadow-xl transition duration-500"
+            ? "dark:bg-opacity-50 bg-white dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:broder-[#ffffff1c] shadow-xl transition duration-500"
             : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shadow"
         }`}
       >
@@ -109,7 +111,7 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
                 <>
                   <Link href="/profile">
                     <Image
-                      src={user.avatar ? user.avatar.url : avatar}
+                      src={user.user.avatar ? user.user.avatar.url : avatar}
                       alt="avatar"
                       width={30}
                       height={30}
@@ -144,13 +146,15 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
               <NavItems activeItem={activeItem} isMobile={true} />
               {user ? (
                 <>
-                  <Image
-                    src={user.avatar ? user.avatar.url : avatar}
-                    alt="avatar"
-                    width={50}
-                    height={50}
-                    className="ml-5 my-2 rounded-full"
-                  />
+                  <Link href="/profile">
+                    <Image
+                      src={user.user.avatar ? user.user.avatar.url : avatar}
+                      alt="avatar"
+                      width={50}
+                      height={50}
+                      className="ml-5 my-2 w-[50px] h-[50px] rounded-full cursor-pointer"
+                    />
+                  </Link>
                 </>
               ) : (
                 <HiOutlineUserCircle
@@ -174,6 +178,7 @@ const Header: FC<Props> = ({ route, open, setOpen, activeItem, setRoute }) => {
           setOpen={setOpen}
           setRoute={setRoute}
           Component={Login}
+          refetch={refetch}
           activeItem={activeItem}
         />
       )}

@@ -38,6 +38,7 @@ const CourseCard: FC<Props> = ({ key, course, isProfile }) => {
               isProfile && "hidden 800px:inline"
             }`}
           >
+            {console.log(course)}
             {course.purchased} Students
           </h5>
         </div>

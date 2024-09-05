@@ -111,7 +111,7 @@ const Footer = (props: Props) => {
               Call Us: 123-456-7890
             </p>
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-              Addess : 123 Main St, Anytown USA
+              Address : 123 Main St, Anytown USA
             </p>
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
               Mail Us: 0t7pA@example.com

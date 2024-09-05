@@ -1,5 +1,8 @@
 "use client";
-import { useGetAllCoursesQuery } from "@/redux/features/course/courseAPI";
+import {
+  useGetAllCoursesQuery,
+  useGetUserAllCoursesQuery,
+} from "@/redux/features/course/courseAPI";
 import { useGetLayoutQuery } from "@/redux/features/layout/layoutAPI";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -8,13 +11,14 @@ import Header from "../components/Header";
 import Heading from "../utils/Heading";
 import { styles } from "../styles/style";
 import CourseCard from "../components/Course/CourseCard";
+import Footer from "../components/Footer";
 
 type Props = {};
 
 const Page = (props: Props) => {
   const searchParams = useSearchParams();
   const search = searchParams?.get("title");
-  const { data, isLoading } = useGetAllCoursesQuery(undefined, {});
+  const { data, isLoading } = useGetUserAllCoursesQuery(undefined, {});
   const { data: categoriesData } = useGetLayoutQuery("Categories");
   const [route, setRoute] = useState("Login");
   const [open, setOpen] = useState(false);
@@ -108,6 +112,7 @@ const Page = (props: Props) => {
               ))}
             </div>
           </div>
+          <Footer />
         </div>
       )}
     </>
